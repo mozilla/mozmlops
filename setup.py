@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 VERSION = '0.0.2'
 DESCRIPTION = 'Artifact store tools'
-LONG_DESCRIPTION = 'Tools for interacting with GCS in our model flows'
+LONG_DESCRIPTION = 'Tools for interacting with GCS in Mozilla model flows'
 
 # Setting up
 setup(
-    name="artifactstore",
+    name="mozmlops",
     version=VERSION,
     author="Mozilla",
     author_email="<ctroy@mozilla.com>",
