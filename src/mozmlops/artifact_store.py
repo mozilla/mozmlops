@@ -9,7 +9,10 @@ from pathlib import Path
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-
+class ClarifyingException(Exception):
+    def __init__(self, message):            
+        self.message = message
+    
 class ArtifactStore:
     """
     This module provides functions for interacting with Google Cloud Storage.
@@ -53,9 +56,13 @@ class ArtifactStore:
             # Google recommends setting `if_generation_match=0` if the
             # object is expected to be new. We don't expect collisions,
             # so setting this to 0 seems good.
-            blob.upload_from_file(f, if_generation_match=0)
-            log_line = f"The model is stored at {storage_path}"
-            logging.info(log_line)
+            try:
+                blob.upload_from_file(f, if_generation_match=0)
+                log_line = f"The model is stored at {storage_path}"
+                logging.info(log_line)
+            except Exception as e:
+                if "" in e.message:
+                    raise ClarifyingException("The object you tried to upload is already in the GCS bucket. if_generation_match=0 in blob.upload dictates this behavior.")
 
         return log_line
 
