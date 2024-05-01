@@ -18,7 +18,7 @@ Interested in contributing? Check out the contributing guidelines. Please note t
 
 ## License
 
-`mozmlops` was created by Mozilla MLOps. It is licensed under the terms of the Proprietary license.
+`mozmlops` was created by Mozilla MLOps. It is licensed under the terms of the Mozilla Public License.
 
 ## Credits
 
