@@ -1,16 +1,38 @@
 # mozmlops
 
-A package for getting your models into production
+A package for getting your models into production!
 
 ## Installation
 
-```bash
-$ pip install mozmlops
+For now, we're not distributing to a package index. But you can install locally! We use a local build manager called poetry for this.
+
+Steps:
+
+1. Clone this repository
+2. `cd` into the repository
+3. Start up a virtual environment:
 ```
+python -m venv env
+source env/bin/activate
+```
+3. `python -m pip install poetry`
+4. poetry install mozmlops
 
 ## Usage
 
-- TODO
+An example import line (in fact, the only one currently implemented) would be:
+
+```
+from mozmlops.artifact_store import ArtifactStore
+```
+
+at the top of your favorite Python file, or in a python console. From there, you can try running this line:
+
+```
+store = ArtifactStore('some-project-name', 'some-bucket-name')
+```
+
+To make sure the import worked.
 
 ## Contributing
 
