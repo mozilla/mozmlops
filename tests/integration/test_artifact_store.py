@@ -65,7 +65,7 @@ def test_store__existing_filename__throws_clear_exception():
 
     I added this test because this happened to me while writing another test, and I found the GCS error message cryptic.
     """
-    # Given an artifact store and a file containing Ada Lovelace's name:
+    # Given an artifact store and a file containing Grace Hopper's name:
 
     artifact_store = ArtifactStore(project_name="mozdata", bucket_name="mozdata-tmp")
 
@@ -75,13 +75,18 @@ def test_store__existing_filename__throws_clear_exception():
     filename_to_store_it_at = f"coined_the_term_bug_{identifier}_{timestamp}.txt"
     encoded_string = string_to_store.encode(encoding='utf-8')
 
-    # When we use .store() to call for her name to be stored on GCS, the command succeeds: 
+    # After we call .store() for that object and location once: 
 
     log_line = artifact_store.store(data=encoded_string, storage_path=filename_to_store_it_at)
     assert log_line == f"The model is stored at {filename_to_store_it_at}"
 
+    # When we do it again: 
+
     try:
         artifact_store.store(data=encoded_string, storage_path=filename_to_store_it_at)
         pytest.fail("Trying to store a file at an existing filename in GCS has historically raised an exception, and just now it didn't.")
+    
+    # We get an exception indicating that we have already stored this object at this location.
+    
     except Exception as e:
         assert "The object you tried to upload is already in the GCS bucket." in e.message, "Google has changed the messaging on the exception used for this."
