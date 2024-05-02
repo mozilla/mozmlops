@@ -11,17 +11,34 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 class ArtifactStore:
-    
+    """
+    This module provides functions for interacting with Google Cloud Storage.
+
+    An instance of this class needs: 
+
+    - The GCS Project name
+    - The GCS Bucket name
+
+    to which that instance will upload, and from which that instance will fetch.
+    """
     def __init__(self, project_name: str, bucket_name: str):
         self.gcs_project_name = project_name
         self.gcs_bucket_name = bucket_name
 
     def _get_storage_path(self, flow_name: str, run_id: str, file_name: str) -> str:
-       
+        """
+        PRIVATE FUNCTION
+
+        Assembles the paths to be uploaded to GCS. 
+        """
         return f"{flow_name}/{run_id}/{file_name}"
 
     def store(self, data: bytes, storage_path: str) -> str:
-        
+        """
+        Places a blob of data, represented in bytes, 
+        at a specific filepath within the GCS project and bucket specified
+        when the ArtifactStore was initialized. 
+        """
         from google.cloud import storage
 
         client = storage.Client(project=self.gcs_project_name)
@@ -39,7 +56,11 @@ class ArtifactStore:
             logging.info(f"The model is stored at {storage_path}")
 
     def fetch(self, remote_path: str, local_path: str) -> str:
-       
+        """
+        Fetches a file 
+        at a specific remote_path within the GCS project and bucket specified
+        and stores it at a location specified by local_path. 
+        """
         from google.cloud import storage
 
         client = storage.Client(project=self.gcs_project_name)
@@ -54,7 +75,11 @@ class ArtifactStore:
         blob.download_to_filename(local_path)
 
     def store_flow_data(self, data: bytes, filename: str) -> str:
-        
+        """
+        Uses this class's public `store` function
+        To store continuous checkpoints during model training
+        orchestrated by a Metaflow flow.
+        """
         from metaflow import current
 
         deployment_path = self._get_storage_path(
@@ -66,7 +91,12 @@ class ArtifactStore:
         return deployment_path
 
     def fetch_flow_data(self, flow_name: str, run_id: str, file_name: str) -> str:
-        
+        """
+        Uses this class's public `fetch` function
+        To fetch artifacts stored on GCS
+        from a prior run of a Metaflow flow.
+        """
+
         from google.cloud import storage
 
         path = self._get_storage_path(
