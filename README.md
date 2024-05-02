@@ -16,7 +16,7 @@ python -m venv env
 source env/bin/activate
 ```
 3. `python -m pip install poetry`
-4. poetry install mozmlops
+4. `poetry install mozmlops`
 
 ## Usage
 
