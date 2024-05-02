@@ -62,7 +62,7 @@ class ArtifactStore:
                 logging.info(log_line)
             except Exception as e:
                 if "" in e.message:
-                    raise ClarifyingException("The object you tried to upload is already in the GCS bucket. if_generation_match=0 in blob.upload dictates this behavior.")
+                    raise ClarifyingException("The object you tried to upload is already in the GCS bucket. Currently, the .store() function's implementation dictates this behavior.")
 
         return log_line
 
@@ -86,6 +86,10 @@ class ArtifactStore:
         blob.download_to_filename(local_path)
 
     def delete(self, remote_path: str) -> str: 
+        """
+        Deletes a file
+        at a specific remote_path within the GCS project and bucket specified.
+        """
         from google.cloud import storage
 
         client = storage.Client(project=self.gcs_project_name)
