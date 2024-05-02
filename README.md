@@ -26,7 +26,9 @@ An example import line (in fact, the only one currently implemented) would be:
 from mozmlops.artifact_store import ArtifactStore
 ```
 
-at the top of your favorite Python file, or in a python console. From there, you can try running this line:
+at the top of your favorite Python file, or in a python console. 
+
+From there, you can try running this line:
 
 ```
 store = ArtifactStore('some-project-name', 'some-bucket-name')
