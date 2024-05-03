@@ -11,7 +11,7 @@ from metaflow import (
 )
 from metaflow.cards import Markdown
 
-from artifact_store import ArtifactStore
+from mozmlops.artifact_store import ArtifactStore
 
 GCS_PROJECT_NAME = "project-name-here"
 GCS_BUCKET_NAME = "bucket-name-here"
