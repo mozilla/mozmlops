@@ -2,6 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 import io
+import os
 import logging
 import sys
 
@@ -28,15 +29,6 @@ class ArtifactStore:
         self.gcs_project_name = project_name
         self.gcs_bucket_name = bucket_name
     
-
-    def _get_storage_path(self, flow_name: str, run_id: str, file_name: str) -> str:
-        """
-        PRIVATE FUNCTION
-
-        Assembles the paths to be uploaded to GCS. 
-        """
-        return f"{flow_name}/{run_id}/{file_name}"
-
     def store(self, data: bytes, storage_path: str) -> str:
         """
         Places a blob of data, represented in bytes, 
@@ -107,7 +99,7 @@ class ArtifactStore:
         """
         from metaflow import current
 
-        deployment_path = self._get_storage_path(
+        deployment_path = os.path.join(
             current.flow_name, current.run_id, filename
         )
 
@@ -124,8 +116,8 @@ class ArtifactStore:
 
         from google.cloud import storage
 
-        path = self._get_storage_path(
-            flow_name=flow_name, run_id=run_id, file_name=file_name
+        path = os.path.join(
+            flow_name, run_id, file_name
         )
 
         self.fetch(remote_path=path, local_path=path)
