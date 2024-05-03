@@ -11,6 +11,7 @@ from metaflow import (
 )
 from metaflow.cards import Markdown
 
+# Only works if you have mozmlops installed. See top level README for installation instructions.
 from mozmlops.artifact_store import ArtifactStore
 
 GCS_PROJECT_NAME = "project-name-here"
