@@ -2,6 +2,10 @@
 
 A package for getting your models into production!
 
+## For the Model Orchestration/Experiment Evaluation Flow Template
+
+You'll find a README in the [src/mozmlops/templates directory](https://github.com/mozilla/mozmlops/tree/main/src/mozmlops/templates)!
+
 ## Installation
 
 For now, we're not distributing to a package index. But you can install locally! We use a local build manager called poetry for this.

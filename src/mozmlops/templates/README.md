@@ -1,6 +1,6 @@
 # Training and Deploying Models in The Cloud
 
-So you're a Mozillian with a machine learning model that needs production-grade infrastructure. Excellent! You've found the toolset for this.
+So you're a Mozillian with a machine learning model that needs production-grade infrastructure. Excellent! You've found the toolset for this. 
 
 We use deployed Metaflow flows with Outerbounds to do model orchestration, and we use Weights and Biases for experiment evaluation. 
 
