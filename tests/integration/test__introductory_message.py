@@ -2,12 +2,10 @@
 def test_introductory_message_for_integration(capsys):
     with capsys.disabled():
         print("""
-        Your test run currently includes the integration tests for this package.
-        These tests require google authentication to test our Google Cloud Storage integration. 
-        They also take several seconds to run.
+        Your test run includes the integration tests for this package.
+        These tests require google authentication and also take several seconds to run.
 
-        If you'd like to iterate more quickly in development, 
-        you can ignore integration tests with the command:
+        To iterate more quickly in development, ignore integration tests with the command:
 
         pytest --ignore=tests/integration
 
