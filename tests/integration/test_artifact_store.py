@@ -98,3 +98,6 @@ def test_store__existing_filename__throws_clear_exception():
     
     except Exception as e:
         assert "The object you tried to upload is already in the GCS bucket." in e.message, "Google has changed the messaging on the exception used for this."
+
+def test_flow():
+    pytest.fail(f"START HERE ON MONDAY CHELSEA! Look here for ways to test this functionality: https://docs.metaflow.org/api/current")
