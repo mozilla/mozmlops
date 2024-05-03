@@ -38,7 +38,7 @@ def test_store_fetch_delete__nominal():
     # When we use .store() to call for her name to be stored on GCS, the command succeeds: 
 
     log_line = artifact_store.store(data=encoded_string, storage_path=filename_to_store_it_at)
-    assert log_line == f"The model is stored at {filename_to_store_it_at}"
+    assert log_line == f"The model is stored at {filename_to_store_it_at}", "The model was not stored as we expect."
 
     # And when we use .fetch() to call for the file to be fetched from GCS, we can retrieve her name:
 
@@ -48,16 +48,24 @@ def test_store_fetch_delete__nominal():
         with open(filename_to_store_it_at, "rb") as file:
             encoded_stored_string = file.read()
             decoded_stored_string = encoded_stored_string.decode(encoding='utf-8')
-            assert decoded_stored_string == string_to_store
+            assert decoded_stored_string == string_to_store, "The model was not fetched as we expect."
 
     # And when we use .delete() to call for the file to be deleted, provided it's possible that our file _uploaded_, we can delete it: 
     # (Lives in a finally block so the file is cleaned up even if fetching fails)
     finally: 
-        # No assertion here because .delete() should throw its own exception if the file cannot be deleted.
         artifact_store.delete(filename_to_store_it_at)
 
-        # Removes local file, in the event that fetch succeeded
-        os.remove(filename_to_store_it_at)
+        try:
+            # This line assumes fetch is working
+            artifact_store.fetch(remote_path=filename_to_store_it_at, local_path=filename_to_store_it_at)
+            
+            pytest.fail("The model was not deleted as we expect; it's still on the GCS file system.")
+        except Exception as e:
+            assert "No such object" in e.message
+
+        finally:
+            # Removes local file, in the event that fetch succeeded
+            os.remove(filename_to_store_it_at)
 
 def test_store__existing_filename__throws_clear_exception():
     """
