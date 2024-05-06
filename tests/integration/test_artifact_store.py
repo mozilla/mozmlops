@@ -12,7 +12,7 @@ def test_store_fetch_delete__nominal():
     `pytest --ignore=tests/integration`
 
     If this test fails, one of the integrations is broken. 
-    Each has its own assertions, which should help pinpoint the failure.
+    Each has its own assertions and error messages, designed to help pinpoint the failure.
     You can also visit the bucket on GCS to find the file:
 
     https://console.cloud.google.com/storage/browser/mozdata-tmp
@@ -20,10 +20,8 @@ def test_store_fetch_delete__nominal():
     These functions are tested together as a top-level integration test because: 
     
     1. .store() and .fetch() are inverse operations, and then .delete() cleans up after .store()
-    2. What we're testng here, largely, is that Google Cloud API is doing what we expect. We're doing this on the assumption that there's a mozdata-tmp bucket in a mozdata project. If this test fails, the API and the bucket assumpton are the prime suspects.
-    3. Testing these functions separately requires independently recreating the integrations implemented in the functions themselves,
-    4. And doing #3 depends on the functionality inventoried in #2, so is no less brittle than calling the functions themselves, and produces logic duplication.
-    6. Finally, both fetching and deleting a file requres the file to be there, which we accomplish by calling .store(). Putting them in the same test guarantees .store() being called to test before .fetch() or .delete().
+    2. Testing these functions separately requires independently recreating the integrations,
+    3. Which duplicates the logic while failing to actually isolate the integration behaviors.
     """
     # Given an artifact store and a file containing Ada Lovelace's name:
 
@@ -56,7 +54,7 @@ def test_store_fetch_delete__nominal():
         artifact_store.delete(filename_to_store_it_at)
 
         try:
-            # This line assumes fetch is working
+            # This line assumes fetch is working (which we believe we're testing for above)
             artifact_store.fetch(remote_path=filename_to_store_it_at, local_path=filename_to_store_it_at)
             
             pytest.fail("The model was not deleted as we expect; it's still on the GCS file system.")
