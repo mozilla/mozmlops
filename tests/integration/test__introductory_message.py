@@ -1,5 +1,9 @@
 
 def test_introductory_message_for_integration(capsys):
+    """
+    Prints an intro message before running the integration tests
+    Signalling that they take time and offering a command to skip them.
+    """
     with capsys.disabled():
         print("""
         Your test run includes the integration tests for this package.
