@@ -91,35 +91,3 @@ class ArtifactStore:
 
         blob.delete()
 
-    def store_flow_data(self, data: bytes, filename: str) -> str:
-        """
-        Uses this class's public `store` function
-        To store continuous checkpoints during model training
-        orchestrated by a Metaflow flow.
-        """
-        from metaflow import current
-
-        deployment_path = os.path.join(
-            current.flow_name, current.run_id, filename
-        )
-
-        self.store(data, deployment_path)
-
-        return deployment_path
-
-    def fetch_flow_data(self, flow_name: str, run_id: str, file_name: str) -> str:
-        """
-        Uses this class's public `fetch` function
-        To fetch artifacts stored on GCS
-        from a prior run of a Metaflow flow.
-        """
-
-        from google.cloud import storage
-
-        path = os.path.join(
-            flow_name, run_id, file_name
-        )
-
-        self.fetch(remote_path=path, local_path=path)
-
-        return path

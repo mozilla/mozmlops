@@ -90,6 +90,15 @@ class TemplateFlow(FlowSpec):
         print(f"All set. Running training.")
         # Model training goes here
 
+        remote_path = os.path.join(current.flow_name, current.run_id, "example_filename.txt")
+        
+        # Example: How you'd store a checkpoint in the cloud
+        example_blob = bytearray([1, 2, 3, 4, 5])
+        artifact_store.store(data=example_blob, storage_path=remote_path)
+
+        # Example: How you'd fetch a checkpoint from the cloud
+        artifact_store.fetch(remote_path=remote_path, local_path="example_filename.txt")
+        
         self.next(self.end)
 
     @step
