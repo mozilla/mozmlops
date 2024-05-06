@@ -3,7 +3,7 @@ import pytest
 
 from datetime import datetime
 
-from mozmlops.artifact_store import ArtifactStore
+from mozmlops.cloud_storage_api_client import CloudStorageAPIClient
 
 def test_store_fetch_delete__nominal():
     """
@@ -25,7 +25,7 @@ def test_store_fetch_delete__nominal():
     """
     # Given an artifact store and a file containing Ada Lovelace's name:
 
-    artifact_store = ArtifactStore(project_name="mozdata", bucket_name="mozdata-tmp")
+    storage_client = CloudStorageAPIClient(project_name="mozdata", bucket_name="mozdata-tmp")
 
     string_to_store = "Ada Lovelace"
     identifier = os.getlogin() if os.getlogin() else "anonymous"
@@ -35,13 +35,13 @@ def test_store_fetch_delete__nominal():
 
     # When we use .store() to call for her name to be stored on GCS, the command succeeds: 
 
-    log_line = artifact_store.store(data=encoded_string, storage_path=filename_to_store_it_at)
+    log_line = storage_client.store(data=encoded_string, storage_path=filename_to_store_it_at)
     assert log_line == f"The model is stored at {filename_to_store_it_at}", "The model was not stored as we expect."
 
     # And when we use .fetch() to call for the file to be fetched from GCS, we can retrieve her name:
 
     try:
-        artifact_store.fetch(remote_path=filename_to_store_it_at, local_path=filename_to_store_it_at)
+        storage_client.fetch(remote_path=filename_to_store_it_at, local_path=filename_to_store_it_at)
 
         with open(filename_to_store_it_at, "rb") as file:
             encoded_stored_string = file.read()
@@ -51,11 +51,11 @@ def test_store_fetch_delete__nominal():
     # And when we use .delete() to call for the file to be deleted, provided it's possible that our file _uploaded_, we can delete it: 
     # (Lives in a finally block so the file is cleaned up even if fetching fails)
     finally: 
-        artifact_store.delete(filename_to_store_it_at)
+        storage_client.delete(filename_to_store_it_at)
 
         try:
             # This line assumes fetch is working (which we believe we're testing for above)
-            artifact_store.fetch(remote_path=filename_to_store_it_at, local_path=filename_to_store_it_at)
+            storage_client.fetch(remote_path=filename_to_store_it_at, local_path=filename_to_store_it_at)
             
             pytest.fail("The model was not deleted as we expect; it's still on the GCS file system.")
         except Exception as e:
@@ -73,7 +73,7 @@ def test_store__existing_filename__throws_clear_exception():
     """
     # Given an artifact store and a file containing Grace Hopper's name:
 
-    artifact_store = ArtifactStore(project_name="mozdata", bucket_name="mozdata-tmp")
+    storage_client = CloudStorageAPIClient(project_name="mozdata", bucket_name="mozdata-tmp")
 
     string_to_store = "Grace Hopper"
     identifier = os.getlogin() if os.getlogin() else "anonymous"
@@ -83,13 +83,13 @@ def test_store__existing_filename__throws_clear_exception():
 
     # After we call .store() for that object and location once: 
 
-    log_line = artifact_store.store(data=encoded_string, storage_path=filename_to_store_it_at)
+    log_line = storage_client.store(data=encoded_string, storage_path=filename_to_store_it_at)
     assert log_line == f"The model is stored at {filename_to_store_it_at}"
 
     # When we do it again: 
 
     try:
-        artifact_store.store(data=encoded_string, storage_path=filename_to_store_it_at)
+        storage_client.store(data=encoded_string, storage_path=filename_to_store_it_at)
         pytest.fail("Trying to store a file at an existing filename in GCS has historically raised an exception, and just now it didn't.")
     
     # We get an exception indicating that we have already stored this object at this location.

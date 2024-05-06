@@ -27,7 +27,7 @@ source env/bin/activate
 An example import line (in fact, the only one currently implemented) would be:
 
 ```
-from mozmlops.artifact_store import ArtifactStore
+from mozmlops.storage_client import CloudStorageAPIClient
 ```
 
 at the top of your favorite Python file, or in a python console. 
@@ -35,7 +35,7 @@ at the top of your favorite Python file, or in a python console.
 From there, you can try running this line:
 
 ```
-store = ArtifactStore('some-project-name', 'some-bucket-name')
+store = CloudStorageAPIClient('some-project-name', 'some-bucket-name')
 ```
 
 To make sure the import worked.

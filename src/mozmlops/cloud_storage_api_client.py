@@ -2,7 +2,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 import io
-import os
 import logging
 import sys
 
@@ -14,7 +13,7 @@ class ClarifyingException(Exception):
     def __init__(self, message):            
         self.message = message
     
-class ArtifactStore:
+class CloudStorageAPIClient:
     """
     This module provides functions for interacting with Google Cloud Storage.
 
@@ -33,7 +32,7 @@ class ArtifactStore:
         """
         Places a blob of data, represented in bytes, 
         at a specific filepath within the GCS project and bucket specified
-        when the ArtifactStore was initialized. 
+        when the CloudStorageAPIClient was initialized. 
         """
         from google.cloud import storage
 
