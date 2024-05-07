@@ -95,4 +95,4 @@ def test_store__existing_filename__throws_clear_exception():
     # We get an exception indicating that we have already stored this object at this location.
     
     except Exception as e:
-        assert "The object you tried to upload is already in the GCS bucket." in e.message, "Google has changed the messaging on the exception used for this."
+        assert "The object you tried to upload is already in the GCS bucket." in str(e), "Google has changed the messaging on the exception used for this."

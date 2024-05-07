@@ -9,10 +9,6 @@ from pathlib import Path
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-class ClarifyingException(Exception):
-    def __init__(self, message):            
-        self.message = message
-    
 class CloudStorageAPIClient:
     """
     This module provides functions for interacting with Google Cloud Storage.
@@ -35,6 +31,7 @@ class CloudStorageAPIClient:
         when the CloudStorageAPIClient was initialized. 
         """
         from google.cloud import storage
+        from google.cloud.exceptions import GoogleCloudError
 
         client = storage.Client(project=self.gcs_project_name)
         bucket = client.get_bucket(self.gcs_bucket_name)
@@ -51,9 +48,10 @@ class CloudStorageAPIClient:
                 blob.upload_from_file(f, if_generation_match=0)
                 log_line = f"The model is stored at {storage_path}"
                 logging.info(log_line)
-            except Exception as e:
-                if "" in e.message:
-                    raise ClarifyingException("The object you tried to upload is already in the GCS bucket. Currently, the .store() function's implementation dictates this behavior.")
+            except GoogleCloudError as e:
+                if e.code == 412:
+                    raise Exception("The object you tried to upload is already in the GCS bucket. Currently, the .store() function's implementation dictates this behavior.")
+                raise e
 
         return log_line
 
