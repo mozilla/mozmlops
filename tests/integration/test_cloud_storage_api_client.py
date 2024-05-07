@@ -38,8 +38,8 @@ def test_store_fetch_delete__nominal(tmp_path):
 
     # When we use .store() to call for her name to be stored on GCS, the command succeeds: 
 
-    log_line = storage_client.store(data=encoded_string, storage_path=filename_to_store_it_at)
-    assert log_line == f"The model is stored at {filename_to_store_it_at}", "The model was not stored as we expect."
+    filepath = storage_client.store(data=encoded_string, storage_path=filename_to_store_it_at)
+    assert filepath == filename_to_store_it_at, "The model was not stored as we expect."
 
     # And when we use .fetch() to call for the file to be fetched from GCS, we can retrieve her name:
 
@@ -83,8 +83,8 @@ def test_store__existing_filename__throws_clear_exception():
 
     # After we call .store() for that object and location once: 
 
-    log_line = storage_client.store(data=encoded_string, storage_path=filename_to_store_it_at)
-    assert log_line == f"The model is stored at {filename_to_store_it_at}"
+    returned_storage_path = storage_client.store(data=encoded_string, storage_path=filename_to_store_it_at)
+    assert returned_storage_path == filename_to_store_it_at
 
     # When we do it again: 
 

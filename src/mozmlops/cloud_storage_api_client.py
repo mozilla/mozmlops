@@ -57,7 +57,7 @@ class CloudStorageAPIClient:
                     raise Exception("The object you tried to upload is already in the GCS bucket. Currently, the .store() function's implementation dictates this behavior.").with_traceback(e.__traceback__)
                 raise e
 
-        return log_line
+        return storage_path
 
     def fetch(self, remote_path: str, local_path: str) -> str:
         """
