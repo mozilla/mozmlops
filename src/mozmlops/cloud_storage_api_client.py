@@ -13,10 +13,10 @@ class CloudStorageAPIClient:
     """
     This module provides functions for interacting with Google Cloud Storage.
 
-    An instance of this class needs: 
+    Arguments:
 
-    - The GCS Project name
-    - The GCS Bucket name
+    - project_name (str): The GCS Project name
+    - bucket_name (str): The GCS Bucket name
 
     to which that instance will upload, and from which that instance will fetch.
     """
@@ -26,6 +26,10 @@ class CloudStorageAPIClient:
     
     def store(self, data: bytes, storage_path: str) -> str:
         """
+        Arguments:
+        data (bytes): The data to be stored in the cloud.
+        storage_path (str): The filepath where the data will be stored.
+
         Places a blob of data, represented in bytes, 
         at a specific filepath within the GCS project and bucket specified
         when the CloudStorageAPIClient was initialized. 
@@ -57,6 +61,10 @@ class CloudStorageAPIClient:
 
     def fetch(self, remote_path: str, local_path: str) -> str:
         """
+        Arguments:
+        remote_path (str): The filepath on GCS from which to fetch the data.
+        storage_path (str): The local filepath in which to store the data.
+
         Fetches a file 
         at a specific remote_path within the GCS project and bucket specified
         and stores it at a location specified by local_path. 
@@ -77,6 +85,9 @@ class CloudStorageAPIClient:
     def __delete(self, remote_path: str) -> str:
         """
         For tests only.
+
+        Arguments:
+        remote_path (str): The filepath on GCS from which to delete the data.
 
         Deletes a file
         at a specific remote_path within the GCS project and bucket specified.
