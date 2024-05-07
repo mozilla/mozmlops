@@ -31,9 +31,8 @@ def test_store_fetch_delete__nominal(tmp_path):
     storage_client = CloudStorageAPIClient(project_name="mozdata", bucket_name="mozdata-tmp")
 
     string_to_store = "Ada Lovelace"
-    identifier = os.getlogin() if os.getlogin() else "anonymous"
     timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-    filename_to_store_it_at = f"first_computer_programmer_{identifier}_{timestamp}.txt"
+    filename_to_store_it_at = f"first_computer_programmer_{timestamp}.txt"
     encoded_string = string_to_store.encode(encoding='utf-8')
 
     # When we use .store() to call for her name to be stored on GCS, the command succeeds: 
