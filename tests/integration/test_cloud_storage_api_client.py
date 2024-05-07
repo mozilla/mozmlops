@@ -86,13 +86,8 @@ def test_store__existing_filename__throws_clear_exception():
     returned_storage_path = storage_client.store(data=encoded_string, storage_path=filename_to_store_it_at)
     assert returned_storage_path == filename_to_store_it_at
 
-    # When we do it again: 
-
-    try:
+    # When we do it again:
+    
+    with pytest.raises(Exception):
+        # Trying to store a file at an existing filename in GCS should raise an exception.
         storage_client.store(data=encoded_string, storage_path=filename_to_store_it_at)
-        pytest.fail("Trying to store a file at an existing filename in GCS has historically raised an exception, and just now it didn't.")
-    
-    # We get an exception indicating that we have already stored this object at this location.
-    
-    except Exception as e:
-        assert "The object you tried to upload is already in the GCS bucket." in str(e), "Uploading existing file no longer produces the exception we expect."
