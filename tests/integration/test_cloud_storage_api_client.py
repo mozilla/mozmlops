@@ -87,7 +87,7 @@ def test_store__existing_filename__throws_clear_exception():
     assert returned_storage_path == filename_to_store_it_at
 
     # When we do it again:
-    
+
     with pytest.raises(Exception):
         # Trying to store a file at an existing filename in GCS should raise an exception.
         storage_client.store(data=encoded_string, storage_path=filename_to_store_it_at)

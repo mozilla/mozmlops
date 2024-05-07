@@ -38,6 +38,8 @@ class CloudStorageAPIClient:
         from google.cloud.exceptions import GoogleCloudError
 
         client = storage.Client(project=self.gcs_project_name)
+
+        # Raises an exception if the bucket name cannot be found
         bucket = client.get_bucket(self.gcs_bucket_name)
 
         blob = bucket.blob(storage_path)
