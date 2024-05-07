@@ -74,8 +74,10 @@ class CloudStorageAPIClient:
 
         blob.download_to_filename(local_path)
 
-    def delete(self, remote_path: str) -> str: 
+    def __delete(self, remote_path: str) -> str:
         """
+        For tests only.
+
         Deletes a file
         at a specific remote_path within the GCS project and bucket specified.
         """

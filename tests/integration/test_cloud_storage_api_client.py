@@ -51,7 +51,7 @@ def test_store_fetch_delete__nominal():
     # And when we use .delete() to call for the file to be deleted, provided it's possible that our file _uploaded_, we can delete it: 
     # (Lives in a finally block so the file is cleaned up even if fetching fails)
     finally: 
-        storage_client.delete(filename_to_store_it_at)
+        storage_client._CloudStorageAPIClient__delete(filename_to_store_it_at)
 
         try:
             # This line assumes fetch is working (which we believe we're testing for above)
