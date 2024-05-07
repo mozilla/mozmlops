@@ -22,6 +22,12 @@ source env/bin/activate
 3. `python -m pip install poetry`
 4. `poetry install`
 
+## Running tests
+
+Run `pytest` from the top-level directory to run the unit tests.
+
+You can run the integration tests with `pytest -m integration`.
+
 ## Usage
 
 An example import line (in fact, the only one currently implemented) would be:

@@ -18,6 +18,12 @@ outerbounds = {extras = ["gcp"], version = "^0.3.62"}
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"
 
+[tool.pytest.ini_options]
+markers = [
+    "integration: marks integration tests (deselect with '-m \"not integration\"')",
+]
+addopts = ["-m not integration"]
+
 [tool.semantic_release]
 version_toml = [
     "pyproject.toml:tool.poetry.version",

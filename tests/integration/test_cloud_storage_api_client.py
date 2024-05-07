@@ -5,6 +5,9 @@ from datetime import datetime
 
 from mozmlops.cloud_storage_api_client import CloudStorageAPIClient
 
+import pytest
+
+@pytest.mark.integration
 def test_store_fetch_delete__nominal():
     """
     Test the integration to store a file, fetch a file, and delete a file. 
@@ -65,6 +68,7 @@ def test_store_fetch_delete__nominal():
             # Removes local file, in the event that fetch succeeded
             os.remove(filename_to_store_it_at)
 
+@pytest.mark.integration
 def test_store__existing_filename__throws_clear_exception():
     """
     Tests that, if we try to store a file in GCS when there's already a file of that name, we get an exception that clearly explains what happened.
