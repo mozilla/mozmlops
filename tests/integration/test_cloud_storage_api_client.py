@@ -8,7 +8,7 @@ from mozmlops.cloud_storage_api_client import CloudStorageAPIClient
 import pytest
 
 @pytest.mark.integration
-def test_store_fetch_delete__nominal():
+def test_store_fetch_delete__nominal(tmp_path):
     """
     Test the integration to store a file, fetch a file, and delete a file. 
     This test takes several seconds to run. Exclude integration tests except before release with the command:
@@ -44,9 +44,9 @@ def test_store_fetch_delete__nominal():
     # And when we use .fetch() to call for the file to be fetched from GCS, we can retrieve her name:
 
     try:
-        storage_client.fetch(remote_path=filename_to_store_it_at, local_path=filename_to_store_it_at)
+        storage_client.fetch(remote_path=filename_to_store_it_at, local_path=f"{tmp_path}/{filename_to_store_it_at}")
 
-        with open(filename_to_store_it_at, "rb") as file:
+        with open(f"{tmp_path}/{filename_to_store_it_at}", "rb") as file:
             encoded_stored_string = file.read()
             decoded_stored_string = encoded_stored_string.decode(encoding='utf-8')
             assert decoded_stored_string == string_to_store, "The model was not fetched as we expect."
@@ -58,15 +58,11 @@ def test_store_fetch_delete__nominal():
 
         try:
             # This line assumes fetch is working (which we believe we're testing for above)
-            storage_client.fetch(remote_path=filename_to_store_it_at, local_path=filename_to_store_it_at)
+            storage_client.fetch(remote_path=filename_to_store_it_at, local_path=f"{tmp_path}/{filename_to_store_it_at}")
             
             pytest.fail("The model was not deleted as we expect; it's still on the GCS file system.")
         except Exception as e:
             assert "No such object" in e.message
-
-        finally:
-            # Removes local file, in the event that fetch succeeded
-            os.remove(filename_to_store_it_at)
 
 @pytest.mark.integration
 def test_store__existing_filename__throws_clear_exception():
