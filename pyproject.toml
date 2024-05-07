@@ -3,7 +3,7 @@ name = "mozmlops"
 version = "0.1.0"
 description = "A package for getting your models into production"
 authors = ["Mozilla MLOps"]
-license = "Proprietary"
+license = { file = "LICENSE" }
 readme = "README.md"
 
 [tool.poetry.dependencies]
