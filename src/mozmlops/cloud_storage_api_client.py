@@ -50,7 +50,7 @@ class CloudStorageAPIClient:
                 logging.info(log_line)
             except GoogleCloudError as e:
                 if e.code == 412:
-                    raise Exception("The object you tried to upload is already in the GCS bucket. Currently, the .store() function's implementation dictates this behavior.")
+                    raise Exception("The object you tried to upload is already in the GCS bucket. Currently, the .store() function's implementation dictates this behavior.").with_traceback(e.__traceback__)
                 raise e
 
         return log_line
