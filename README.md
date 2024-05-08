@@ -22,6 +22,10 @@ source env/bin/activate
 3. `python -m pip install poetry`
 4. `poetry install`
 
+## Linting
+
+Run `pylint src` and `pylint tests` from the root directory.
+ 
 ## Running tests
 
 **Unit tests:**

@@ -1006,6 +1006,19 @@ files = [
 pyasn1 = ">=0.4.6,<0.7.0"
 
 [[package]]
+name = "pyenchant"
+version = "3.2.2"
+description = "Python bindings for the Enchant spellchecking system"
+optional = false
+python-versions = ">=3.5"
+files = [
+    {file = "pyenchant-3.2.2-py3-none-any.whl", hash = "sha256:5facc821ece957208a81423af7d6ec7810dad29697cb0d77aae81e4e11c8e5a6"},
+    {file = "pyenchant-3.2.2-py3-none-win32.whl", hash = "sha256:5a636832987eaf26efe971968f4d1b78e81f62bca2bde0a9da210c7de43c3bce"},
+    {file = "pyenchant-3.2.2-py3-none-win_amd64.whl", hash = "sha256:6153f521852e23a5add923dbacfbf4bebbb8d70c4e4bad609a8e0f9faeb915d1"},
+    {file = "pyenchant-3.2.2.tar.gz", hash = "sha256:1cf830c6614362a78aab78d50eaf7c6c93831369c52e1bb64ffae1df0341e637"},
+]
+
+[[package]]
 name = "pylint"
 version = "3.1.0"
 description = "python code static checker"
@@ -1027,6 +1040,7 @@ dill = [
 isort = ">=4.2.5,<5.13.0 || >5.13.0,<6"
 mccabe = ">=0.6,<0.8"
 platformdirs = ">=2.2.0"
+pyenchant = {version = ">=3.2,<4.0", optional = true, markers = "extra == \"spelling\""}
 tomli = {version = ">=1.1.0", markers = "python_version < \"3.11\""}
 tomlkit = ">=0.10.1"
 
@@ -1586,4 +1600,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "179b88563a4aefff9884ac80a29e29e422b16032c1d6d180e3b3959e844125a7"
+content-hash = "4189d7bc80f0fdbf07b6221aa9b496c37a6b196f0a46555ec4c325dc9fd86d7f"
