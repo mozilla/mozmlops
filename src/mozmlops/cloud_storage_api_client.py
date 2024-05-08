@@ -9,39 +9,37 @@ from pathlib import Path
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-
-class ArtifactStore:
+class CloudStorageAPIClient:
     """
     This module provides functions for interacting with Google Cloud Storage.
 
-    An instance of this class needs: 
+    Arguments:
 
-    - The GCS Project name
-    - The GCS Bucket name
+    - project_name (str): The GCS Project name
+    - bucket_name (str): The GCS Bucket name
 
     to which that instance will upload, and from which that instance will fetch.
     """
     def __init__(self, project_name: str, bucket_name: str):
         self.gcs_project_name = project_name
         self.gcs_bucket_name = bucket_name
-
-    def _get_storage_path(self, flow_name: str, run_id: str, file_name: str) -> str:
-        """
-        PRIVATE FUNCTION
-
-        Assembles the paths to be uploaded to GCS. 
-        """
-        return f"{flow_name}/{run_id}/{file_name}"
-
+    
     def store(self, data: bytes, storage_path: str) -> str:
         """
+        Arguments:
+        data (bytes): The data to be stored in the cloud.
+        storage_path (str): The filepath where the data will be stored.
+
         Places a blob of data, represented in bytes, 
         at a specific filepath within the GCS project and bucket specified
-        when the ArtifactStore was initialized. 
+        when the CloudStorageAPIClient was initialized. 
         """
         from google.cloud import storage
+        from google.cloud.exceptions import GoogleCloudError
 
         client = storage.Client(project=self.gcs_project_name)
+
+        # Raises an exception if the bucket name cannot be found
         bucket = client.get_bucket(self.gcs_bucket_name)
 
         blob = bucket.blob(storage_path)
@@ -52,11 +50,23 @@ class ArtifactStore:
             # Google recommends setting `if_generation_match=0` if the
             # object is expected to be new. We don't expect collisions,
             # so setting this to 0 seems good.
-            blob.upload_from_file(f, if_generation_match=0)
-            logging.info(f"The model is stored at {storage_path}")
+            try:
+                blob.upload_from_file(f, if_generation_match=0)
+                log_line = f"The model is stored at {storage_path}"
+                logging.info(log_line)
+            except GoogleCloudError as e:
+                if e.code == 412:
+                    raise Exception("The object you tried to upload is already in the GCS bucket. Currently, the .store() function's implementation dictates this behavior.").with_traceback(e.__traceback__)
+                raise e
+
+        return storage_path
 
     def fetch(self, remote_path: str, local_path: str) -> str:
         """
+        Arguments:
+        remote_path (str): The filepath on GCS from which to fetch the data.
+        storage_path (str): The local filepath in which to store the data.
+
         Fetches a file 
         at a specific remote_path within the GCS project and bucket specified
         and stores it at a location specified by local_path. 
@@ -74,35 +84,22 @@ class ArtifactStore:
 
         blob.download_to_filename(local_path)
 
-    def store_flow_data(self, data: bytes, filename: str) -> str:
+    def __delete(self, remote_path: str) -> str:
         """
-        Uses this class's public `store` function
-        To store continuous checkpoints during model training
-        orchestrated by a Metaflow flow.
+        For tests only.
+
+        Arguments:
+        remote_path (str): The filepath on GCS from which to delete the data.
+
+        Deletes a file
+        at a specific remote_path within the GCS project and bucket specified.
         """
-        from metaflow import current
-
-        deployment_path = self._get_storage_path(
-            current.flow_name, current.run_id, filename
-        )
-
-        self.store(data, deployment_path)
-
-        return deployment_path
-
-    def fetch_flow_data(self, flow_name: str, run_id: str, file_name: str) -> str:
-        """
-        Uses this class's public `fetch` function
-        To fetch artifacts stored on GCS
-        from a prior run of a Metaflow flow.
-        """
-
         from google.cloud import storage
 
-        path = self._get_storage_path(
-            flow_name=flow_name, run_id=run_id, file_name=file_name
-        )
+        client = storage.Client(project=self.gcs_project_name)
+        bucket = client.get_bucket(self.gcs_bucket_name)
 
-        self.fetch(remote_path=path, local_path=path)
+        blob = bucket.blob(remote_path)
 
-        return path
+        blob.delete()
+

@@ -3,14 +3,27 @@ name = "mozmlops"
 version = "0.1.0"
 description = "A package for getting your models into production"
 authors = ["Mozilla MLOps"]
-license = "Proprietary"
+license = "MPL-2.0"
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
 google-api-core = "^2.19.0"
+google-cloud-storage = "^2.16.0"
+wandb = "^0.16.6"
+outerbounds = {extras = ["gcp"], version = "^0.3.62"}
 
 [tool.poetry.dev-dependencies]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.0"
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: marks integration tests (deselect with '-m \"not integration\"')",
+]
+addopts = ["-m not integration"]
+
 [tool.semantic_release]
 version_toml = [
     "pyproject.toml:tool.poetry.version",

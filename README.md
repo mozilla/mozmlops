@@ -20,14 +20,26 @@ python -m venv env
 source env/bin/activate
 ```
 3. `python -m pip install poetry`
-4. `poetry install mozmlops`
+4. `poetry install`
+
+## Running tests
+
+**Unit tests:**
+
+Run `pytest` from the top-level directory.
+
+**Integration tests:**
+
+You need to be logged into GCP to run the integration tests; you can use the gcloud CLI command `gcloud auth login`. 
+
+Run the integration tests with `pytest -m integration`.
 
 ## Usage
 
 An example import line (in fact, the only one currently implemented) would be:
 
 ```
-from mozmlops.artifact_store import ArtifactStore
+from mozmlops.storage_client import CloudStorageAPIClient
 ```
 
 at the top of your favorite Python file, or in a python console. 
@@ -35,7 +47,7 @@ at the top of your favorite Python file, or in a python console.
 From there, you can try running this line:
 
 ```
-store = ArtifactStore('some-project-name', 'some-bucket-name')
+store = CloudStorageAPIClient('some-project-name', 'some-bucket-name')
 ```
 
 To make sure the import worked.

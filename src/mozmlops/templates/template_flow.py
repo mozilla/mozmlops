@@ -12,7 +12,7 @@ from metaflow import (
 from metaflow.cards import Markdown
 
 # Only works if you have mozmlops installed. See top level README for installation instructions.
-from mozmlops.artifact_store import ArtifactStore
+from mozmlops.cloud_storage_api_client import CloudStorageAPIClient
 
 GCS_PROJECT_NAME = "project-name-here"
 GCS_BUCKET_NAME = "bucket-name-here"
@@ -71,8 +71,8 @@ class TemplateFlow(FlowSpec):
         import wandb
 
         # This can help you fetch and upload artifacts to
-        # GCS. Check out help(ArtifactStore) for more details.
-        artifact_store = ArtifactStore(
+        # GCS. Check out help(CloudStorageAPIClient) for more details.
+        storage_client = CloudStorageAPIClient(
             project_name=GCS_PROJECT_NAME, bucket_name=GCS_BUCKET_NAME
         )
 
@@ -90,6 +90,15 @@ class TemplateFlow(FlowSpec):
         print(f"All set. Running training.")
         # Model training goes here
 
+        remote_path = os.path.join(current.flow_name, current.run_id, "example_filename.txt")
+        
+        # Example: How you'd store a checkpoint in the cloud
+        example_blob = bytearray([1, 2, 3, 4, 5])
+        storage_client.store(data=example_blob, storage_path=remote_path)
+
+        # Example: How you'd fetch a checkpoint from the cloud
+        storage_client.fetch(remote_path=remote_path, local_path="example_filename.txt")
+        
         self.next(self.end)
 
     @step
