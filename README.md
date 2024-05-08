@@ -24,9 +24,15 @@ source env/bin/activate
 
 ## Running tests
 
-Run `pytest` from the top-level directory to run the unit tests.
+**Unit tests:**
 
-You can run the integration tests with `pytest -m integration`.
+Run `pytest` from the top-level directory.
+
+**Integration tests:**
+
+You need to be logged into GCP to run the integration tests; you can use the gcloud CLI command `gcloud auth login`. 
+
+Run the integration tests with `pytest -m integration`.
 
 ## Usage
 

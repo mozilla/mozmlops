@@ -8,8 +8,7 @@ import pytest
 def test_store_fetch_delete__nominal(tmp_path):
     """
     Test the integration to store a file, fetch a file, and delete a file. 
-    This test takes several seconds to run. Exclude integration tests except before release with the command:
-    `pytest --ignore=tests/integration`
+    This test takes several seconds to run.
 
     If this test fails, one of the integrations is broken. 
     Each has its own assertions and error messages, designed to help pinpoint the failure.
