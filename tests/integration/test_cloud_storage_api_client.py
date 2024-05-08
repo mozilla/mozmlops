@@ -1,5 +1,3 @@
-import os
-
 from datetime import datetime
 
 from mozmlops.cloud_storage_api_client import CloudStorageAPIClient
@@ -74,9 +72,8 @@ def test_store__existing_filename__throws_clear_exception():
     storage_client = CloudStorageAPIClient(project_name="mozdata", bucket_name="mozdata-tmp")
 
     string_to_store = "Grace Hopper"
-    identifier = os.getlogin() if os.getlogin() else "anonymous"
     timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-    filename_to_store_it_at = f"coined_the_term_bug_{identifier}_{timestamp}.txt"
+    filename_to_store_it_at = f"coined_the_term_bug_{timestamp}.txt"
     encoded_string = string_to_store.encode(encoding='utf-8')
 
     # After we call .store() for that object and location once: 
