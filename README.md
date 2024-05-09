@@ -24,6 +24,10 @@ source env/bin/activate
 
 ## Running tests
 
+**Linting:**
+
+Run `ruff check` to find style issues and `ruff check --fix` to fix many automatically.
+
 **Unit tests:**
 
 Run `pytest` from the top-level directory.
