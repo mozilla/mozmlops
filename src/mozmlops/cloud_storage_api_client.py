@@ -24,7 +24,7 @@ class CloudStorageAPIClient:
         self.gcs_project_name = project_name
         self.gcs_bucket_name = bucket_name
     
-    def store(self, data: bytes, storage_path: str) -> str:
+    def store(self, data: bytes, storage_path: str, testing=False) -> str:
         """
         Arguments:
         data (bytes): The data to be stored in the cloud.
@@ -51,7 +51,7 @@ class CloudStorageAPIClient:
             # object is expected to be new. We don't expect collisions,
             # so setting this to 0 seems good.
             try:
-                blob.upload_from_file(f, if_generation_match=0)
+                upload_value = blob.upload_from_file(f, if_generation_match=0)
                 log_line = f"The model is stored at {storage_path}"
                 logging.info(log_line)
             except GoogleCloudError as e:
@@ -59,7 +59,10 @@ class CloudStorageAPIClient:
                     raise Exception("The object you tried to upload is already in the GCS bucket. Currently, the .store() function's implementation dictates this behavior.").with_traceback(e.__traceback__)
                 raise e
 
-        return storage_path
+        if testing:
+            return bucket, blob, upload_value, storage_path
+        else:
+            return storage_path
 
     def fetch(self, remote_path: str, local_path: str) -> str:
         """
