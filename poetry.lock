@@ -210,6 +210,24 @@ files = [
 colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
+name = "cloud-storage-mocker"
+version = "0.3.4"
+description = "Mocker library of Google Cloud Storage with local filesystem mounting."
+optional = false
+python-versions = "<3.13,>=3.8"
+files = [
+    {file = "cloud_storage_mocker-0.3.4-py3-none-any.whl", hash = "sha256:87be5ad2fa6f34f27e4aec9654ccd4f82e26f988a4267d076ff72f21ec1e1715"},
+    {file = "cloud_storage_mocker-0.3.4.tar.gz", hash = "sha256:a16bac982fbf2810340295c6d556e5e95b79a90671151d8657b868c0583ac64f"},
+]
+
+[package.dependencies]
+google-cloud-storage = ">=2.7.0"
+
+[package.extras]
+dev = ["black (>=22.10)", "flake8 (>=5.0)", "isort (>=5.10)", "mypy (>=0.991)", "pyproject-flake8 (>=5.0)", "pytest (>=7.1)"]
+mypy = ["mypy (>=0.991)", "pytest (>=7.1)"]
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -1611,5 +1629,5 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 
 [metadata]
 lock-version = "2.0"
-python-versions = "^3.10"
-content-hash = "3f1eec08ebc6ac6b59b3b81761274cba71bf359f22981440d3af0ca67b7cbcfe"
+python-versions = ">=3.10,<3.13"
+content-hash = "ef11eb8fb80249022bab13891c8e931e5695c6f4e1a5afda987d1f7f338d6cdd"

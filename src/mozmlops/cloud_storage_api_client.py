@@ -40,7 +40,7 @@ class CloudStorageAPIClient:
         client = storage.Client(project=self.gcs_project_name)
 
         # Raises an exception if the bucket name cannot be found
-        bucket = client.get_bucket(self.gcs_bucket_name)
+        bucket = client.bucket(self.gcs_bucket_name)
 
         blob = bucket.blob(storage_path)
 
@@ -74,7 +74,7 @@ class CloudStorageAPIClient:
         from google.cloud import storage
 
         client = storage.Client(project=self.gcs_project_name)
-        bucket = client.get_bucket(self.gcs_bucket_name)
+        bucket = client.bucket(self.gcs_bucket_name)
 
         blob = bucket.blob(remote_path)
 
@@ -83,6 +83,7 @@ class CloudStorageAPIClient:
         p.parent.mkdir(parents=True, exist_ok=True)
 
         blob.download_to_filename(local_path)
+        return local_path
 
     def __delete(self, remote_path: str) -> str:
         """
