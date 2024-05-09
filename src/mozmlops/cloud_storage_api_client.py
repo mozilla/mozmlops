@@ -51,7 +51,7 @@ class CloudStorageAPIClient:
             # object is expected to be new. We don't expect collisions,
             # so setting this to 0 seems good.
             try:
-                upload_value = blob.upload_from_file(f, if_generation_match=0)
+                blob.upload_from_file(f, if_generation_match=0)
                 log_line = f"The model is stored at {storage_path}"
                 logging.info(log_line)
             except GoogleCloudError as e:
