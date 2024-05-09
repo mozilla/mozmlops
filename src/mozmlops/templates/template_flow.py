@@ -7,7 +7,7 @@ import os
 from metaflow import (
     FlowSpec, IncludeFile, Parameter,
     card, current, step,
-    environment, kubernetes
+    environment, kubernetes # noqa: F401
 )
 from metaflow.cards import Markdown
 
@@ -84,10 +84,10 @@ class TemplateFlow(FlowSpec):
                 project=os.getenv("WANDB_PROJECT")
             )
             wandb_url = tracking_run.get_url()
-            current.card.append(Markdown(f"# Weights & Biases"))
+            current.card.append(Markdown("# Weights & Biases"))
             current.card.append(Markdown(f"Your training run is tracked [here]({wandb_url})."))
 
-        print(f"All set. Running training.")
+        print("All set. Running training.")
         # Model training goes here
 
         remote_path = os.path.join(current.flow_name, current.run_id, "example_filename.txt")

@@ -12,6 +12,7 @@ google-api-core = "^2.19.0"
 google-cloud-storage = "^2.16.0"
 wandb = "^0.16.6"
 outerbounds = {extras = ["gcp"], version = "^0.3.62"}
+ruff = "^0.4.3"
 
 [tool.poetry.dev-dependencies]
 
