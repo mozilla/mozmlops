@@ -1,3 +1,4 @@
+import io
 from datetime import datetime
 from google.cloud import storage
 
@@ -5,38 +6,55 @@ from mozmlops.cloud_storage_api_client import CloudStorageAPIClient
 
 import pytest
 
-class MockGoogleCloudStorageClient():
-    def __init__(self, **kwargs):
-        self.initializer_args = kwargs
-        self.call_list = [f"__init__ with {kwargs}"]
+import google.cloud.storage  # type: ignore[import]
 
-    def get_bucket(self, attr):
-        return MockGoogleCloudBucket()
+from cloud_storage_mocker import BlobMetadata, Mount
+from cloud_storage_mocker import patch as gcs_patch
 
-class MockGoogleCloudBucket():
-    def blob(self, storage_path):
-        return MockBlob()
+import pathlib
+def test_store__stores_file_on_gcs(tmp_path: pathlib.Path) -> None:
+    # Mounts directories. Empty list is allowed if no actual access is required.
+    with gcs_patch(
+        [
+            Mount("testbucket", tmp_path / "src", readable=True, writable=True),
+        ],
+    ):
+        storage_client = CloudStorageAPIClient(project_name="testproject", bucket_name="testbucket")
 
-class MockBlob():
-    def upload_from_file(self, bytes, if_generation_match):
-        return 'fake value to test that we call blob.upload_from_file'
+        string_to_store = "Ada Lovelace"
+        timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        filename_to_store_it_at = f"first_computer_programmer_{timestamp}.txt"
+        encoded_string = string_to_store.encode(encoding='utf-8')
 
-def get_mock_storage_client(**kwargs):
-    return MockGoogleCloudStorageClient(**kwargs)
+        filepath = storage_client.store(data=encoded_string, storage_path=filename_to_store_it_at)
+        assert filepath == filename_to_store_it_at
 
-def test_store__calls_gcloud(monkeypatch):
-    monkeypatch.setattr(storage, 'Client', get_mock_storage_client)
+        mock_client = google.cloud.storage.Client()
+        blob = mock_client.bucket("testbucket").blob(filename_to_store_it_at)
+        assert blob.download_as_text() == string_to_store
 
-    storage_client = CloudStorageAPIClient(project_name="mozdata", bucket_name="mozdata-tmp")
+def test_fetch__gets_file_off_gcs(tmp_path: pathlib.Path) -> None:
+    # Mounts directories. Empty list is allowed if no actual access is required.
+    with gcs_patch(
+        [
+            Mount("testbucket", tmp_path / "src", readable=True, writable=True),
+        ],
+    ):
+        storage_client = CloudStorageAPIClient(project_name="testproject", bucket_name="testbucket")
 
-    string_to_store = "Ada Lovelace"
-    filename_to_store_it_at = f"first_computer_programmer.txt"
-    encoded_string = string_to_store.encode(encoding='utf-8')
+        string_to_store = "Ada Lovelace"
+        timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        filename_to_store_it_at = f"first_computer_programmer_{timestamp}.txt"
+        encoded_string = string_to_store.encode(encoding='utf-8')
 
-    # When we use .store() to call for her name to be stored on GCS, the command calls google cloud the way we expect:
 
-    bucket, blob, upload_value, call_list = storage_client.store(data=encoded_string, storage_path=filename_to_store_it_at, testing=True)
-    assert isinstance(bucket, MockGoogleCloudBucket)
-    assert isinstance(blob, MockBlob)
-    assert upload_value == 'fake value to test that we call blob.upload_from_file'
-    assert call_list == filename_to_store_it_at, "The model was not stored as we expect."
+        mock_client = google.cloud.storage.Client()
+        blob = mock_client.bucket("testbucket").blob(filename_to_store_it_at)
+        with io.BytesIO(encoded_string) as data:
+            blob.upload_from_file(data)
+
+        storage_client.fetch(remote_path=filename_to_store_it_at, local_path=tmp_path / filename_to_store_it_at)
+        assert (tmp_path / filename_to_store_it_at).read_text() == string_to_store
+
+
+

@@ -24,7 +24,7 @@ class CloudStorageAPIClient:
         self.gcs_project_name = project_name
         self.gcs_bucket_name = bucket_name
     
-    def store(self, data: bytes, storage_path: str, testing=False) -> str:
+    def store(self, data: bytes, storage_path: str) -> str:
         """
         Arguments:
         data (bytes): The data to be stored in the cloud.
@@ -40,7 +40,7 @@ class CloudStorageAPIClient:
         client = storage.Client(project=self.gcs_project_name)
 
         # Raises an exception if the bucket name cannot be found
-        bucket = client.get_bucket(self.gcs_bucket_name)
+        bucket = client.bucket(self.gcs_bucket_name)
 
         blob = bucket.blob(storage_path)
 
@@ -59,10 +59,7 @@ class CloudStorageAPIClient:
                     raise Exception("The object you tried to upload is already in the GCS bucket. Currently, the .store() function's implementation dictates this behavior.").with_traceback(e.__traceback__)
                 raise e
 
-        if testing:
-            return bucket, blob, upload_value, storage_path
-        else:
-            return storage_path
+        return storage_path
 
     def fetch(self, remote_path: str, local_path: str) -> str:
         """
@@ -77,7 +74,7 @@ class CloudStorageAPIClient:
         from google.cloud import storage
 
         client = storage.Client(project=self.gcs_project_name)
-        bucket = client.get_bucket(self.gcs_bucket_name)
+        bucket = client.bucket(self.gcs_bucket_name)
 
         blob = bucket.blob(remote_path)
 
@@ -86,6 +83,7 @@ class CloudStorageAPIClient:
         p.parent.mkdir(parents=True, exist_ok=True)
 
         blob.download_to_filename(local_path)
+        return local_path
 
     def __delete(self, remote_path: str) -> str:
         """
