@@ -6,9 +6,9 @@
 
 # -- Project information -----------------------------------------------------
 
-project = u"mozmlops"
-copyright = u"2024, Mozilla MLOps"
-author = u"Mozilla MLOps"
+project = "mozmlops"
+copyright = "2024, Mozilla MLOps"
+author = "Mozilla MLOps"
 
 # -- General configuration ---------------------------------------------------
 

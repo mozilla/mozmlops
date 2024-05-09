@@ -5,9 +5,14 @@
 import os
 
 from metaflow import (
-    FlowSpec, IncludeFile, Parameter,
-    card, current, step,
-    environment, kubernetes # noqa: F401
+    FlowSpec,
+    IncludeFile,
+    Parameter,
+    card,
+    current,
+    step,
+    environment,
+    kubernetes,  # noqa: F401
 )
 from metaflow.cards import Markdown
 
@@ -16,6 +21,7 @@ from mozmlops.cloud_storage_api_client import CloudStorageAPIClient
 
 GCS_PROJECT_NAME = "project-name-here"
 GCS_BUCKET_NAME = "bucket-name-here"
+
 
 class TemplateFlow(FlowSpec):
     """
@@ -33,7 +39,7 @@ class TemplateFlow(FlowSpec):
         "offline",
         help="Do not connect to W&B servers when training",
         type=bool,
-        default=True
+        default=True,
     )
 
     # You can uncomment and adjust this decorator when it's time to scale your flow remotely.
@@ -50,11 +56,13 @@ class TemplateFlow(FlowSpec):
         self.next(self.train)
 
     @card
-    @environment(vars={
-        "WANDB_API_KEY": os.getenv("WANDB_API_KEY"),
-        "WANDB_ENTITY": os.getenv("WANDB_ENTITY"),
-        "WANDB_PROJECT": os.getenv("WANDB_PROJECT")
-    })
+    @environment(
+        vars={
+            "WANDB_API_KEY": os.getenv("WANDB_API_KEY"),
+            "WANDB_ENTITY": os.getenv("WANDB_ENTITY"),
+            "WANDB_PROJECT": os.getenv("WANDB_PROJECT"),
+        }
+    )
     # Note: the image parameter must be a fully qualified registry path otherwise Metaflow will default to
     # the AWS public registry.
     # You can uncomment and adjust this decorator when it's time to scale your flow remotely.
@@ -80,25 +88,27 @@ class TemplateFlow(FlowSpec):
         print(f"The config file says: {config_as_dict.get('example_key')}")
 
         if not self.offline_wandb:
-            tracking_run = wandb.init(
-                project=os.getenv("WANDB_PROJECT")
-            )
+            tracking_run = wandb.init(project=os.getenv("WANDB_PROJECT"))
             wandb_url = tracking_run.get_url()
             current.card.append(Markdown("# Weights & Biases"))
-            current.card.append(Markdown(f"Your training run is tracked [here]({wandb_url})."))
+            current.card.append(
+                Markdown(f"Your training run is tracked [here]({wandb_url}).")
+            )
 
         print("All set. Running training.")
         # Model training goes here
 
-        remote_path = os.path.join(current.flow_name, current.run_id, "example_filename.txt")
-        
+        remote_path = os.path.join(
+            current.flow_name, current.run_id, "example_filename.txt"
+        )
+
         # Example: How you'd store a checkpoint in the cloud
         example_blob = bytearray([1, 2, 3, 4, 5])
         storage_client.store(data=example_blob, storage_path=remote_path)
 
         # Example: How you'd fetch a checkpoint from the cloud
         storage_client.fetch(remote_path=remote_path, local_path="example_filename.txt")
-        
+
         self.next(self.end)
 
     @step
@@ -118,4 +128,3 @@ class TemplateFlow(FlowSpec):
 
 if __name__ == "__main__":
     TemplateFlow()
-
