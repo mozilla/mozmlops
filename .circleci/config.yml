@@ -30,7 +30,7 @@ jobs:
           key: v1-deps-{{ checksum "poetry.lock" }}
       - run:
           name: "Unit tests"
-          command: "python -m pytest"
+          command: python -m pytest
       - run:
           name: "Integration tests"
           command: "python -m pytest -m integration"
