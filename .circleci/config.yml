@@ -31,6 +31,9 @@ jobs:
           paths:
             - env
       - run:
+          name: "should not need this"
+          command: "pip install pytest"
+      - run:
           name: "Unit tests"
           command: "pytest"
       - run:
