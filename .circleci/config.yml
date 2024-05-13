@@ -31,14 +31,11 @@ jobs:
           paths:
             - env
       - run:
-          name: "should not need this"
-          command: "pip install pytest"
-      - run:
           name: "Unit tests"
-          command: "pytest"
+          command: "poetry run pytest"
       - run:
           name: "Integration tests"
-          command: "pytest -m integration"
+          command: "poetry run pytest -m integration"
 
 
 # Orchestrate jobs using workflows
