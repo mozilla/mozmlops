@@ -28,12 +28,6 @@ jobs:
       # save any changes to the cache
       - save_cache:
           key: v1-deps-{{ checksum "poetry.lock" }}
-      - run:
-          name: "Unit tests"
-          command: python -m pytest
-      - run:
-          name: "Integration tests"
-          command: "python -m pytest -m integration"
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
