@@ -23,6 +23,9 @@ jobs:
           key: v1-deps-{{ checksum "poetry.lock" }}
       # install dependencies
       - run:
+          name: "install dependency manager"
+          command: pip install poetry
+      - run:
           name: "install dependencies"
           command: poetry install
       # save any changes to the cache
