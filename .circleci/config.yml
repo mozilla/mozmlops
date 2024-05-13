@@ -30,10 +30,10 @@ jobs:
           key: v1-deps-{{ checksum "poetry.lock" }}
       - run:
           name: "Unit tests"
-          command: "pytest"
+          command: "python -m pytest"
       - run:
           name: "Integration tests"
-          command: "pytest -m integration"
+          command: "python -m pytest -m integration"
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
