@@ -32,10 +32,10 @@ jobs:
             - env
       - run:
           name: "Unit tests"
-          command: pytest
+          command: "pytest"
       - run:
           name: "Integration tests"
-          command: "python -m pytest -m integration"
+          command: "pytest -m integration"
 
 
 # Orchestrate jobs using workflows
