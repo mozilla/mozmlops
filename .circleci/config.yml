@@ -28,8 +28,6 @@ jobs:
       # save any changes to the cache
       - save_cache:
           key: v1-deps-{{ checksum "poetry.lock" }}
-          paths:
-            - dependency_cache
       - run:
           name: "Unit tests"
           command: "pytest"
