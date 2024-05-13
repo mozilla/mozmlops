@@ -11,7 +11,7 @@ jobs:
     docker:
       # Specify the version you desire here
       # See: https://circleci.com/developer/images/image/cimg/base
-      - image: cimg/base:current
+      - image: cimg/python:current
 
     # Add steps to the job
     # See: https://circleci.com/docs/jobs-steps/#steps-overview & https://circleci.com/docs/configuration-reference/#steps
@@ -22,9 +22,6 @@ jobs:
       - restore_cache:
           key: v1-deps-{{ checksum "poetry.lock" }}
       # install dependencies
-      - run:
-          name: "install dependency manager"
-          command: pip install poetry
       - run:
           name: "install dependencies"
           command: poetry install
