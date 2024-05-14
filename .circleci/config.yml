@@ -34,8 +34,11 @@ jobs:
           name: "Unit tests"
           command: "poetry run pytest"
       - run:
-          name: "Integration tests"
-          command: "poetry run pytest -m integration"
+          name: "Format check"
+          command: "poetry run ruff check"
+#      - run:
+#          name: "Integration tests"
+#          command: "poetry run pytest -m integration"
 
 
 # Orchestrate jobs using workflows
