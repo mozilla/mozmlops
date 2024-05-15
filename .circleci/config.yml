@@ -34,7 +34,7 @@ jobs:
           name: "Unit tests"
           command: "poetry run pytest"
       - run:
-          name: "Format check"
+          name: "Linting check"
           command: "poetry run ruff check"
 #      - run:
 #          name: "Integration tests"
