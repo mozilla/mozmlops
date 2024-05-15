@@ -36,6 +36,10 @@ jobs:
       - run:
           name: "Linting check"
           command: "poetry run ruff check"
+      - run:
+          name: "Format check"
+          command: "poetry run ruff format --check"
+#      To be added in https://mozilla-hub.atlassian.net/browse/DENG-3741
 #      - run:
 #          name: "Integration tests"
 #          command: "poetry run pytest -m integration"
