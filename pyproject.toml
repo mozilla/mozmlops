@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mozmlops"
-version = "0.1.0"
+version = "0.1.1"
 description = "A package for getting your models into production"
 authors = ["Mozilla MLOps"]
 license = "MPL-2.0"
