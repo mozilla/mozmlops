@@ -1,0 +1,54 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/configuration-reference
+version: 2.1
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
+jobs:
+  pre-merge-job:
+    # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/executor-intro/ & https://circleci.com/docs/configuration-reference/#executor-job
+    docker:
+      # Specify the version you desire here
+      # See: https://circleci.com/developer/images/image/cimg/base
+      - image: cimg/python:3.12.3
+
+    # Add steps to the job
+    # See: https://circleci.com/docs/jobs-steps/#steps-overview & https://circleci.com/docs/configuration-reference/#steps
+    steps:
+      # Checkout the code as the first step.
+      - checkout
+      # look for existing cache and restore if found
+      - restore_cache:
+          key: v1-deps-{{ checksum "poetry.lock" }}
+      # install dependencies
+      - run:
+          name: "install dependencies"
+          command: poetry install
+      # save any changes to the cache
+      - save_cache:
+          key: v1-deps-{{ checksum "poetry.lock" }}
+          paths:
+            - env
+      - run:
+          name: "Unit tests"
+          command: "poetry run pytest"
+      - run:
+          name: "Linting check"
+          command: "poetry run ruff check"
+      - run:
+          name: "Format check"
+          command: "poetry run ruff format --check"
+#      To be added in https://mozilla-hub.atlassian.net/browse/DENG-3741
+#      - run:
+#          name: "Integration tests"
+#          command: "poetry run pytest -m integration"
+
+
+# Orchestrate jobs using workflows
+# See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
+workflows:
+  pre-merge-workflow: # This is the name of the workflow, feel free to change it to better match your workflow.
+    # Inside the workflow, you define the jobs you want to run.
+    jobs:
+      - pre-merge-job
