@@ -41,7 +41,10 @@ jobs:
           command: "poetry run ruff format --check"
       - run:
           name: "Integration tests"
-          command: "poetry run pytest -m integration"
+          command: |
+            export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp.json"
+            echo "$GCLOUD_SERVICE_KEY" > "$GOOGLE_APPLICATION_CREDENTIALS"
+            poetry run pytest -m integration
 
 
 # Orchestrate jobs using workflows
