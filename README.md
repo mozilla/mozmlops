@@ -6,9 +6,11 @@ A package for getting your models into production!
 
 You'll find a README in the [src/mozmlops/templates directory](https://github.com/mozilla/mozmlops/tree/main/src/mozmlops/templates)!
 
-## Installation
+## Installation for use
 
-For now, we're not distributing to a package index. But you can install locally! We use a local build manager called poetry for this.
+You can install the library with `pip install mozmlops`.
+
+## Installation for local testing and contributing
 
 Steps:
 
