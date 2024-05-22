@@ -2,7 +2,13 @@
 
 <!--next-version-placeholder-->
 
-## v0.2.0 (10/09/2021)
+## v0.1.2 (2024-05-22)
+
+### Fix
+
+- Updated README with new installation procedure
+
+## v0.1.1 (2024-05-22)
 
 ### Feature
 
@@ -16,6 +22,6 @@
 
 - Added integration tests for the cloud storage API client
 
-## v0.1.0 (01/05/2024)
+## v0.1.0 (2024-05-01)
 
 - First release of `mozmlops`!
