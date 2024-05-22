@@ -51,5 +51,6 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - pre-merge-job:
+          # Provides environment variables needed to integrate with GCS for integration tests
          context: data-eng-circleci-tests
 
