@@ -41,6 +41,9 @@ jobs:
           command: "poetry run ruff format --check"
       - run:
           name: "Integration tests"
+          # These commands load our application credentials from the service account
+          # So that we can run the integration tests.
+          # See https://cloud.google.com/docs/authentication/production
           command: |
             export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp.json"
             echo "$GCLOUD_SERVICE_KEY" > "$GOOGLE_APPLICATION_CREDENTIALS"
