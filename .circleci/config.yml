@@ -39,10 +39,15 @@ jobs:
       - run:
           name: "Format check"
           command: "poetry run ruff format --check"
-#      To be added in https://mozilla-hub.atlassian.net/browse/DENG-3741
-#      - run:
-#          name: "Integration tests"
-#          command: "poetry run pytest -m integration"
+      - run:
+          name: "Integration tests"
+          # These commands load our application credentials from the service account
+          # So that we can run the integration tests.
+          # See https://cloud.google.com/docs/authentication/production
+          command: |
+            export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp.json"
+            echo "$GCLOUD_SERVICE_KEY" > "$GOOGLE_APPLICATION_CREDENTIALS"
+            poetry run pytest -m integration
 
 
 # Orchestrate jobs using workflows
@@ -51,4 +56,7 @@ workflows:
   pre-merge-workflow: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - pre-merge-job
+      - pre-merge-job:
+          # Provides environment variables needed to integrate with GCS for integration tests
+         context: data-eng-circleci-tests
+
