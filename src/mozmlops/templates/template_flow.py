@@ -68,7 +68,7 @@ class TemplateFlow(FlowSpec):
     # as show in the comments a few lines down.
     @pypi(
         python="3.10.11",
-        packages={"scikit-learn": "1.5.0", "mozmlops": "0.1.3"},
+        packages={"scikit-learn": "1.5.0", "mozmlops": "0.1.4"},
     )
     # You can uncomment and adjust this decorator to scale your flow remotely with a custom image.
     # Note: the image parameter must be a fully qualified registry path otherwise Metaflow will default to
