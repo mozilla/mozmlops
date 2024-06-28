@@ -20,6 +20,7 @@ from metaflow.cards import Markdown
 GCS_PROJECT_NAME = "project-name-here"
 GCS_BUCKET_NAME = "bucket-name-here"
 
+
 class TemplateFlow(FlowSpec):
     """
     This flow is a template for you to use
@@ -65,11 +66,8 @@ class TemplateFlow(FlowSpec):
     # You can also make a custom docker image and use that with the @kubernetes decorator
     # as show in the comments a few lines down.
     @pypi(
-        python='3.10.11',
-        packages={
-            'scikit-learn': '1.5.0',
-            'mozmlops': '0.1.2',
-        }
+        python="3.10.11",
+        packages={"scikit-learn": "1.5.0", "mozmlops": "0.1.3"},
     )
     # You can uncomment and adjust this decorator to scale your flow remotely with a custom image.
     # Note: the image parameter must be a fully qualified registry path otherwise Metaflow will default to
@@ -116,8 +114,9 @@ class TemplateFlow(FlowSpec):
         X, y = iris.data, iris.target
 
         # Split the dataset into training and testing sets
-        X_train, X_test, y_train, y_test = \
-            train_test_split(X, y, test_size=0.2, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, random_state=42
+        )
 
         # Initialize the classifier
         clf = LogisticRegression(max_iter=300)
@@ -128,17 +127,23 @@ class TemplateFlow(FlowSpec):
         # Make predictions on the test data
         y_pred = clf.predict(X_test)
 
-        prediction_path = os.path.join(current.flow_name, current.run_id, "y_predictions.txt")
+        prediction_path = os.path.join(
+            current.flow_name, current.run_id, "y_predictions.txt"
+        )
         observed_path = os.path.join(current.flow_name, current.run_id, "y_test.txt")
 
         # Example: How you'd store a checkpoint in the cloud
         predictions_for_storage = bytearray(y_pred)
         storage_client.store(data=predictions_for_storage, storage_path=prediction_path)
         observed_values_for_storage = bytearray(y_test)
-        storage_client.store(data=observed_values_for_storage, storage_path=observed_path)
+        storage_client.store(
+            data=observed_values_for_storage, storage_path=observed_path
+        )
 
         # Example: How you'd fetch a checkpoint from the cloud
-        storage_client.fetch(remote_path=prediction_path, local_path="y_predictions.txt")
+        storage_client.fetch(
+            remote_path=prediction_path, local_path="y_predictions.txt"
+        )
 
         self.next(self.end)
 
