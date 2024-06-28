@@ -90,9 +90,11 @@ class TemplateFlow(FlowSpec):
 
         # This can help you fetch and upload artifacts to
         # GCS. Check out help(CloudStorageAPIClient) for more details.
-        storage_client = CloudStorageAPIClient(
-            project_name=GCS_PROJECT_NAME, bucket_name=GCS_BUCKET_NAME
-        )
+        # It does require the account you're running the flow from to have
+        # access to Google Cloud Storage.
+        # storage_client = CloudStorageAPIClient(
+        #     project_name=GCS_PROJECT_NAME, bucket_name=GCS_BUCKET_NAME
+        # )
 
         config_as_dict = json.loads(self.example_config)
         print(f"The config file says: {config_as_dict.get('example_key')}")
@@ -134,16 +136,16 @@ class TemplateFlow(FlowSpec):
 
         # Example: How you'd store a checkpoint in the cloud
         predictions_for_storage = bytearray(y_pred)
-        storage_client.store(data=predictions_for_storage, storage_path=prediction_path)
+        # storage_client.store(data=predictions_for_storage, storage_path=prediction_path)
         observed_values_for_storage = bytearray(y_test)
-        storage_client.store(
-            data=observed_values_for_storage, storage_path=observed_path
-        )
+        # storage_client.store(
+        #     data=observed_values_for_storage, storage_path=observed_path
+        # )
 
         # Example: How you'd fetch a checkpoint from the cloud
-        storage_client.fetch(
-            remote_path=prediction_path, local_path="y_predictions.txt"
-        )
+        # storage_client.fetch(
+        #     remote_path=prediction_path, local_path="y_predictions.txt"
+        # )
 
         self.next(self.end)
 
