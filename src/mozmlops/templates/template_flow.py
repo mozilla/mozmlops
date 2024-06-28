@@ -1,3 +1,4 @@
+# ruff: noqa
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -13,11 +14,9 @@ from metaflow import (
     step,
     environment,
     kubernetes,  # noqa: F401
+    pypi,
 )
 from metaflow.cards import Markdown
-
-# Only works if you have mozmlops installed. See top level README for installation instructions.
-from mozmlops.cloud_storage_api_client import CloudStorageAPIClient
 
 GCS_PROJECT_NAME = "project-name-here"
 GCS_BUCKET_NAME = "bucket-name-here"
@@ -63,9 +62,17 @@ class TemplateFlow(FlowSpec):
             "WANDB_PROJECT": os.getenv("WANDB_PROJECT"),
         }
     )
+    # This PyPI decorator allows you to specify dependencies for running flows remotely.
+    # If your dependency tree is more complicated than importing a few things from pip,
+    # You can also make a custom docker image and use that with the @kubernetes decorator
+    # as show in the comments a few lines down.
+    @pypi(
+        python="3.10.11",
+        packages={"scikit-learn": "1.5.0", "mozmlops": "0.1.4"},
+    )
+    # You can uncomment and adjust this decorator to scale your flow remotely with a custom image.
     # Note: the image parameter must be a fully qualified registry path otherwise Metaflow will default to
     # the AWS public registry.
-    # You can uncomment and adjust this decorator when it's time to scale your flow remotely.
     # @kubernetes(image="url-to-docker-image:tag", gpu=0)
     @step
     def train(self):
@@ -77,12 +84,18 @@ class TemplateFlow(FlowSpec):
         """
         import json
         import wandb
+        from sklearn.datasets import load_iris
+        from sklearn.model_selection import train_test_split
+        from sklearn.linear_model import LogisticRegression
+        from mozmlops.cloud_storage_api_client import CloudStorageAPIClient
 
         # This can help you fetch and upload artifacts to
         # GCS. Check out help(CloudStorageAPIClient) for more details.
-        storage_client = CloudStorageAPIClient(
-            project_name=GCS_PROJECT_NAME, bucket_name=GCS_BUCKET_NAME
-        )
+        # It does require the account you're running the flow from to have
+        # access to Google Cloud Storage.
+        # storage_client = CloudStorageAPIClient(
+        #     project_name=GCS_PROJECT_NAME, bucket_name=GCS_BUCKET_NAME
+        # )
 
         config_as_dict = json.loads(self.example_config)
         print(f"The config file says: {config_as_dict.get('example_key')}")
@@ -96,18 +109,44 @@ class TemplateFlow(FlowSpec):
             )
 
         print("All set. Running training.")
-        # Model training goes here
+        # Model training goes here; for example, a LogisticRegression model on the iris dataset.
+        # Of course, replace this example with YOUR model training code :).
 
-        remote_path = os.path.join(
-            current.flow_name, current.run_id, "example_filename.txt"
+        # Load the Iris dataset
+        iris = load_iris()
+        X, y = iris.data, iris.target
+
+        # Split the dataset into training and testing sets
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, random_state=42
         )
 
+        # Initialize the classifier
+        clf = LogisticRegression(max_iter=300)
+
+        # Train the classifier on the training data
+        clf.fit(X_train, y_train)
+
+        # Make predictions on the test data
+        y_pred = clf.predict(X_test)
+
+        prediction_path = os.path.join(
+            current.flow_name, current.run_id, "y_predictions.txt"
+        )
+        observed_path = os.path.join(current.flow_name, current.run_id, "y_test.txt")
+
         # Example: How you'd store a checkpoint in the cloud
-        example_blob = bytearray([1, 2, 3, 4, 5])
-        storage_client.store(data=example_blob, storage_path=remote_path)
+        predictions_for_storage = bytearray(y_pred)
+        # storage_client.store(data=predictions_for_storage, storage_path=prediction_path)
+        observed_values_for_storage = bytearray(y_test)
+        # storage_client.store(
+        #     data=observed_values_for_storage, storage_path=observed_path
+        # )
 
         # Example: How you'd fetch a checkpoint from the cloud
-        storage_client.fetch(remote_path=remote_path, local_path="example_filename.txt")
+        # storage_client.fetch(
+        #     remote_path=prediction_path, local_path="y_predictions.txt"
+        # )
 
         self.next(self.end)
 
