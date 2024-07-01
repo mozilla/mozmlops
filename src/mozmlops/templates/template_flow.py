@@ -1,4 +1,3 @@
-# ruff: noqa
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -87,7 +86,7 @@ class TemplateFlow(FlowSpec):
         from sklearn.datasets import load_iris
         from sklearn.model_selection import train_test_split
         from sklearn.linear_model import LogisticRegression
-        from mozmlops.cloud_storage_api_client import CloudStorageAPIClient
+        from mozmlops.cloud_storage_api_client import CloudStorageAPIClient  # noqa: F401
 
         # This can help you fetch and upload artifacts to
         # GCS. Check out help(CloudStorageAPIClient) for more details.
@@ -130,15 +129,15 @@ class TemplateFlow(FlowSpec):
         # Make predictions on the test data
         y_pred = clf.predict(X_test)
 
-        prediction_path = os.path.join(
+        prediction_path = os.path.join(  # noqa: F841
             current.flow_name, current.run_id, "y_predictions.txt"
         )
-        observed_path = os.path.join(current.flow_name, current.run_id, "y_test.txt")
+        observed_path = os.path.join(current.flow_name, current.run_id, "y_test.txt")  # noqa: F841
 
         # Example: How you'd store a checkpoint in the cloud
-        predictions_for_storage = bytearray(y_pred)
+        predictions_for_storage = bytearray(y_pred)  # noqa: F841
         # storage_client.store(data=predictions_for_storage, storage_path=prediction_path)
-        observed_values_for_storage = bytearray(y_test)
+        observed_values_for_storage = bytearray(y_test)  # noqa: F841
         # storage_client.store(
         #     data=observed_values_for_storage, storage_path=observed_path
         # )
