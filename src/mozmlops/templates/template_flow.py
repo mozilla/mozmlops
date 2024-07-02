@@ -12,7 +12,8 @@ from metaflow import (
     current,
     step,
     environment,
-    kubernetes,  
+    kubernetes,  # noqa: F401
+    pypi,
 )
 from metaflow.cards import Markdown
 
@@ -60,14 +61,18 @@ class TemplateFlow(FlowSpec):
             "WANDB_PROJECT": os.getenv("WANDB_PROJECT"),
         }
     )
-
+    # This PyPI decorator allows you to specify dependencies for running flows remotely.
+    # If your dependency tree is more complicated than importing a few things from pip,
+    # You can also make a custom docker image and use that with the @kubernetes decorator
+    # as show in the comments a few lines down.
+    @pypi(
+        python="3.10.11",
+        packages={"scikit-learn": "1.5.0", "mozmlops": "0.1.4"},
+    )
     # You can uncomment and adjust this decorator to scale your flow remotely with a custom image.
     # Note: the image parameter must be a fully qualified registry path otherwise Metaflow will default to
     # the AWS public registry.
-    # The image referenced HERE is the mozmlops demo image, 
-    # which has both the dependencies you need run this template flow:
-    # scikit-learn (for the specific model called in this demo) and mozmlops (for all your ops tools).
-    @kubernetes(image="registry.hub.docker.com/chelseatroy/mozmlops:latest", cpu=1)
+    # @kubernetes(image="url-to-docker-image:tag", gpu=0)
     @step
     def train(self):
         """
@@ -78,9 +83,9 @@ class TemplateFlow(FlowSpec):
         """
         import json
         import wandb
-        from sklearn.datasets import load_iris  # noqa # pylint: disable=import-error
-        from sklearn.model_selection import train_test_split  # noqa # pylint: disable=import-error
-        from sklearn.linear_model import LogisticRegression  # noqa # pylint: disable=import-error
+        from sklearn.datasets import load_iris
+        from sklearn.model_selection import train_test_split
+        from sklearn.linear_model import LogisticRegression
         from mozmlops.cloud_storage_api_client import CloudStorageAPIClient  # noqa: F401
 
         # This can help you fetch and upload artifacts to
