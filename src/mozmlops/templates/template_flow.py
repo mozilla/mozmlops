@@ -12,7 +12,7 @@ from metaflow import (
     current,
     step,
     environment,
-    kubernetes,  
+    kubernetes,
 )
 from metaflow.cards import Markdown
 
@@ -60,11 +60,10 @@ class TemplateFlow(FlowSpec):
             "WANDB_PROJECT": os.getenv("WANDB_PROJECT"),
         }
     )
-
     # You can uncomment and adjust this decorator to scale your flow remotely with a custom image.
     # Note: the image parameter must be a fully qualified registry path otherwise Metaflow will default to
     # the AWS public registry.
-    # The image referenced HERE is the mozmlops demo image, 
+    # The image referenced HERE is the mozmlops demo image,
     # which has both the dependencies you need run this template flow:
     # scikit-learn (for the specific model called in this demo) and mozmlops (for all your ops tools).
     @kubernetes(image="registry.hub.docker.com/chelseatroy/mozmlops:latest", cpu=1)
