@@ -4,8 +4,7 @@
 # If you need more help, visit the Dockerfile reference guide at
 # https://docs.docker.com/go/dockerfile-reference/
 
-ARG TAG=3.10.11-bullseye
-FROM --platform=linux/amd64 python:${TAG} as base
+FROM --platform=linux/amd64 python:3.10.11-bullseye
 
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
