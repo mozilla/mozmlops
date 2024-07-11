@@ -77,9 +77,9 @@ class TemplateFlow(FlowSpec):
         """
         import json
         import wandb
-        from sklearn.datasets import load_iris  # noqa # pylint: disable=import-error
-        from sklearn.model_selection import train_test_split  # noqa # pylint: disable=import-error
-        from sklearn.linear_model import LogisticRegression  # noqa # pylint: disable=import-error
+        from sklearn.datasets import load_iris
+        from sklearn.model_selection import train_test_split
+        from sklearn.linear_model import LogisticRegression
         from mozmlops.cloud_storage_api_client import CloudStorageAPIClient  # noqa: F401
 
         # This can help you fetch and upload artifacts to
