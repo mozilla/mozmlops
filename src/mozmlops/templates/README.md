@@ -31,6 +31,10 @@ The Metaflow flow will run internal consistency checks and linting, and then pro
 
 It'll do so on the Outerbounds platform, in the perimeter that you have specified. Perimeters need to be proactively granted access to resources whose access groups are more limited than mozilla-confidential.
 
+### Though these flows are designed to run in the cloud, sometimes you need to run one locally.
+
+Maybe you want to run a quick test on a smaller dataset, or maybe you need to use your employee credentials to spike something before starting the process of getting permissions on your Outerbounds perimeter.
+
 If you want to run the flow _locally_ with _your_ gcloud credentials to test out functionality that depends on permissions that _you_ have but the _perimeter_ doesn't, there are two steps to do that:
 
 1. (You only should ever have to do this once): Add an empty config set to your `.metaflowconfig` directory. This command will do it for you:
