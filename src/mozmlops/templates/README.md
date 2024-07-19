@@ -27,7 +27,27 @@ You should see an instruction to run a command line command that starts with `ou
 > [!TIP]
 >The `--offline True` command line argument tells the template flow to not track experiments on W&B.
 
-The Metaflow flow will run internal consistency checks and linting, and then provide a link to track the progress of the flow on our platform, see stderr and stdout, et cetera. 
+The Metaflow flow will run internal consistency checks and linting, and then provide a link to track the progress of the flow on our platform, see stderr and stdout, et cetera.
+
+It'll do so on the Outerbounds platform, in the perimeter that you have specified. Perimeters need to be proactively granted access to resources whose access groups are more limited than mozilla-confidential.
+
+### Though these flows are designed to run in the cloud, sometimes you need to run one locally.
+
+Maybe you want to run a quick test on a smaller dataset, or maybe you need to use your employee credentials to spike something before starting the process of getting permissions on your Outerbounds perimeter.
+
+If you want to run the flow _locally_ with _your_ gcloud credentials to test out functionality that depends on permissions that _you_ have but the _perimeter_ doesn't, there are two steps to do that:
+
+1. (You only should ever have to do this once): Add an empty config set to your `.metaflowconfig` directory. This command will do it for you:
+
+```
+$echo '{}' > ~/.metaflowconfig/config_local.json
+```
+
+2. Run the command to kick off the job with `METAFLOW_PROFILE=local` on the front. For example:
+
+```commandline
+$METAFLOW_PROFILE=local python template_flow.py run --offline True
+```
 
 Eventually you should see the flow finish with "Task finished successfully." Once you see that, you know you've got a working minimal flow: you're now ready to start putting your model training code _into_ this flow to run it remotely. Comments _inside_ the template file should help you understand where to put that code, and demonstrate some of the tools Metaflow makes available to you.
 
