@@ -25,7 +25,7 @@ and "help wanted" is open to whoever wants to implement it.
 
 ### Write Documentation
 
-You can never have enough documentation! Please feel free to contribute to any
+Please feel free to contribute to any
 part of the documentation, such as the official docs, docstrings, or even
 on the web in blog posts, articles, and such.
 
@@ -71,3 +71,39 @@ Before you submit a pull request, check that it meets these guidelines:
 
 Please note that the `mozmlops` project is released with a
 Code of Conduct. By contributing to this project you agree to abide by its terms.
+
+## Releasing a New Version: For Maintainers
+
+Here are the commands you'll need to release a new version of the library, in rough order.
+
+First, check that everything is formatted and working properly:
+  
+```commandline
+ruff format
+pytest
+pytest -m integration
+```
+
+Then, cut a new release version and commit it:
+
+```
+poetry version patch/minor/major
+git status
+git add -u
+git commit -m "Update changelog and version"
+git tag <whatever the new version number is: example v0.1.4 >
+git push
+git push --tags
+```
+
+Publish to PyPI:
+
+```
+poetry build
+poetry publish -r test-pypi
+poetry publish
+```
+
+
+
+
