@@ -12,7 +12,7 @@ The templates in this repository will help you integrate with both.
 
 An admin from Mozilla’s MLOps team needs to set you up with an Outerbounds User account, and also a perimeter if your team doesn’t have that yet. [Here's how Mozillians can get an account](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/708214995/Getting+an+Outerbounds+Account).
 
-Once MLOps comes back to you with a shiny new Outerbounds account, you can sign in [here](https://docs.google.com/document/d/12S06Q-9xh6YGkyBpi6iGWGazYDivxl2fT4KaHtbrzV4/edit).
+Once MLOps comes back to you with a shiny new Outerbounds account, you can sign in [here](https://ui.desertowl.obp.outerbounds.com/dashboard).
 
 Go to [this page right here](https://ui.desertowl.obp.outerbounds.com/dashboard/configure?location=local). You’ll see some instructions. If you installed `mozmlops` you have already installed Outerbounds, so you get to skip that one. 
 
