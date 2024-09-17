@@ -12,10 +12,11 @@ The templates in this repository will help you integrate with both.
 
 An admin from Mozilla’s MLOps team needs to set you up with an Outerbounds User account, and also a perimeter if your team doesn’t have that yet. [Here's how Mozillians can get an account](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/708214995/Getting+an+Outerbounds+Account).
 
-Once MLOps comes back to you with a shiny new Outerbounds account, you can sign in [here](https://docs.google.com/document/d/12S06Q-9xh6YGkyBpi6iGWGazYDivxl2fT4KaHtbrzV4/edit).
+Once MLOps comes back to you with a shiny new Outerbounds account, you can sign in [here](https://ui.desertowl.obp.outerbounds.com/dashboard).
 
 Go to [this page right here](https://ui.desertowl.obp.outerbounds.com/dashboard/configure?location=local). You’ll see some instructions. If you installed `mozmlops` you have already installed Outerbounds, so you get to skip that one. 
-Look for a dropdown that says “perimeter.” You want to make sure that, if your data has more restricted access than All-Mozilla, you have checked the perimeter name that you received from MLOps. If your data has all-Mozilla access, you can check “default” here.
+
+Back on the [main page](https://ui.desertowl.obp.outerbounds.com/dashboard/runs), look for a dropdown at the top that says “Mozilla/” and then, after it, a perimeter name (probably 'default'). You want to make sure that, if your data has more restricted access than All-Mozilla, you have checked the perimeter name that you received from MLOps. If your data has all-Mozilla access, you can check “default” here.
 
 You should see an instruction to run a command line command that starts with `outerbounds configure`. Copy that whole thing and run it on your command line. What this does, is it makes a `config.json` file located at `~/.metaflowconfig` on your local machine. This is the default configuration for metaflow on your machine now, and unless told otherwise, metaflow flows on your machine will now always run on Outerbounds. 
 
