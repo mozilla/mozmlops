@@ -54,17 +54,15 @@ Eventually you should see the flow finish with "Task finished successfully." Onc
 
  ## Next: Tracking, Visualizing, and Evaluating ML Experiments
 
-An admin from Mozilla’s MLOps team needs to set you up with a Weights and Biases User account, and also a team if your team doesn’t have that yet, on Weights and Biases. [Here's how Mozillians can get an account](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/471010754/Getting+a+Weights+and+Biases+account).
+An admin from Mozilla’s MLOps team needs to set you up with your team on Weights and Biases.[Ask them to add you](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/471010754/Getting+a+Weights+and+Biases+account), and then once they do, you can click through to the invitation to create your Weights and Biases account.
 
-Once you have the account, you're in luck; the `template_flow` already integrates with Weights and Biases for you. 
+Once you're set up, you're in luck; the `template_flow` already integrates with Weights and Biases for you. 
 
-Note the three environment variables listed at the top of the `train` step:
+Note the two environment variables listed at the top of the `train` step:
 
 - The `WANDB_API_KEY` you can get by going to [this page](https://wandb.ai/), once your wandb credentials are set up (see the account provisioning section). Treat this with the sensitive that you would treat any API key. You will see in a later step how to use this string; for now, you can stick this in your local repository’s .env. 
 
-- The `WANDB_ENTITY` is your wandb username or the service account username (provided to you by the MLOps upon request). 
-
-- The `WANDB_PROJECT` is the name of the project that this run is for. You can see and create projects for your team at this URL: https://wandb.ai/YOUR_TEAM_NAME_HERE/projects.
+- The `WANDB_PROJECT` is the name of the project that this run is for. If you are deploying a brand new flow that has not appeared on wandb before, you'll need to create a new project for it. Otherwise, you can choose the one for which your teammates have already submitted flows. You can see and create projects for your team at this URL: https://wandb.ai/YOUR_TEAM_NAME_HERE/projects.
 
 You can customize what you send to Weights and Biases as well as the graphs and data that appears there, and the team maintains decent documentation on your customization options. The wandb engineering support team is also incredibly helpful. Talk to MLOps about your problem and they can get you added to our joint channel with wandb where folks are available to help.
 
@@ -72,7 +70,7 @@ You can customize what you send to Weights and Biases as well as the graphs and 
 When you kick off the flow from your local machine, you can specify the environment variables via our super-advanced technical workaround: tacking them onto the front of the command. To wit:
 
 ```bash
-WANDB_API_KEY=your-key-here WANDB_ENTITY=ctroy WANDB_PROJECT=mlops-codecopilot-demo python your-flow.py run --offline False
+WANDB_API_KEY=your-key-here WANDB_PROJECT=mlops-codecopilot-demo python your-flow.py run --offline False
 ```
 
 We know this workaround fails to account for scheduling and scripts: we're working on improving this part of the process as soon as possible.

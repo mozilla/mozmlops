@@ -56,7 +56,6 @@ class TemplateFlow(FlowSpec):
     @environment(
         vars={
             "WANDB_API_KEY": os.getenv("WANDB_API_KEY"),
-            "WANDB_ENTITY": os.getenv("WANDB_ENTITY"),
             "WANDB_PROJECT": os.getenv("WANDB_PROJECT"),
         }
     )
