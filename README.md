@@ -45,7 +45,7 @@ Run the integration tests with `pytest -m integration`.
 An example import line (in fact, the only one currently implemented) would be:
 
 ```
-from mozmlops.storage_client import CloudStorageAPIClient
+from mozmlops.cloud_storage_api_client import CloudStorageAPIClient
 ```
 
 at the top of your favorite Python file, or in a python console. 
