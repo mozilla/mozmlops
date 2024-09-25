@@ -22,7 +22,7 @@ You should see an instruction to run a command line command that starts with `ou
 
 ### Running the template Metaflow flow
 
-1. Install the requirements listed in [`templates/requirements.txt`](`templates/requirements.txt`) and also add those to your project requirements files.
+1. Install the requirements listed in [`templates/requirements.outerbounds.txt`](requirements.outerbounds.txt) and also add those to your project requirements files.
 2. Copy the `template_flow.py` file from this repo into _your_ repo. From there, you can run `python template_flow.py run --offline True`.
 
 > [!TIP]
