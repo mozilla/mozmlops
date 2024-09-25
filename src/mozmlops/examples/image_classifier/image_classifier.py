@@ -1,7 +1,6 @@
 import os
 from metaflow import (
     FlowSpec,
-    IncludeFile,
     Parameter,
     card,
     current,
@@ -38,12 +37,12 @@ class ImageClassifier(FlowSpec):
         import torchvision.transforms as transforms
 
         # Download and normalize CIFAR10
-        print(f'start step: downloading and normalizing dataset')
+        print("start step: downloading and normalizing dataset")
         transform = transforms.Compose(
             [transforms.ToTensor(),
             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
         )
-        batch_size = 4
+
         self.trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
                                                 download=True, transform=transform)
         self.testset = torchvision.datasets.CIFAR10(root='./data', train=False,
@@ -218,7 +217,7 @@ class ImageClassifier(FlowSpec):
     def upload_model_to_gcs(self):
         from mozmlops.cloud_storage_api_client import CloudStorageAPIClient
 
-        print(f"Uploading model to gcs")
+        print("Uploading model to gcs")
         # init client
         storage_client = CloudStorageAPIClient(
             project_name=GCS_PROJECT_NAME, bucket_name=GCS_BUCKET_NAME
