@@ -12,9 +12,9 @@ from metaflow import (
 )
 from metaflow.cards import Markdown
 
-GCS_PROJECT_NAME = "moz-fx-mlops-inference-nonprod"
-GCS_BUCKET_NAME = "mf-models-test1"
-MODEL_STORAGE_PATH = "abhishek-mlops-hackdays/model-bytes.pth"
+GCS_PROJECT_NAME = "your-gcp-project-here"
+GCS_BUCKET_NAME = "your-gcs-bucket-here"
+MODEL_STORAGE_PATH = "image_classifier/trained-model-bytes.pth"
 
 
 class ImageClassifier(FlowSpec):
