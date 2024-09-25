@@ -30,6 +30,10 @@ source env/bin/activate
 
 Run `ruff check` to find style issues and `ruff check --fix` to fix many automatically.
 
+**Formatting:**
+
+Run `ruff format`
+
 **Unit tests:**
 
 Run `pytest` from the top-level directory.
