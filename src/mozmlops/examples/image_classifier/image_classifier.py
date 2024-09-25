@@ -12,8 +12,10 @@ from metaflow import (
 )
 from metaflow.cards import Markdown
 
+# Set the right GCP project and GCS bucket
 GCS_PROJECT_NAME = "your-gcp-project-here"
 GCS_BUCKET_NAME = "your-gcs-bucket-here"
+# Model blob to be uploaded to GCS
 MODEL_STORAGE_PATH = "image_classifier/trained-model-bytes.pth"
 
 
