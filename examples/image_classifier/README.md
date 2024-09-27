@@ -7,7 +7,7 @@
 
 ### Running this example on cloud
 #### Pre-requisites
-1. Make sure to follow these [README instructions](../../templates/README.md) to:
+1. Make sure to follow these [README instructions](../../src/mozmlops/templates/README.md) to:
     1. Have a User account with Outerbounds
     2. Configure your local machine to run your flows on Outerbounds
     3. Have a User account with Weights & Biases
