@@ -1,3 +1,7 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 import os
 from metaflow import (
     FlowSpec,
@@ -123,13 +127,13 @@ class ImageClassifier(FlowSpec):
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
-        # load train data
+        # Load train data
         batch_size = 4
         trainloader = torch.utils.data.DataLoader(
             self.trainset, batch_size=batch_size, shuffle=True, num_workers=2
         )
 
-        # start training
+        # Start training
         num_epochs = 2
         for epoch in range(num_epochs):  # loop over the dataset multiple times
             running_loss = 0.0
@@ -160,7 +164,7 @@ class ImageClassifier(FlowSpec):
         self.model_state_dict_bytes = buffer.getvalue()
         self.next(self.evaluate)
 
-    # Test the network on the test data
+    # Test the model on the test data
     @pypi(
         python="3.11.9",
         packages={
