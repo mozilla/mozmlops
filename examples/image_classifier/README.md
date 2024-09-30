@@ -7,14 +7,15 @@
 
 ### Running this example on cloud
 #### Pre-requisites
-1. Make sure to follow these [README instructions](../../src/mozmlops/templates/README.md) to:
-    1. Have a User account with Outerbounds
+1. Follow these [README instructions](../../src/mozmlops/templates/README.md#most-importantly-you-need-an-account-with-outerbounds-do-not-make-this-yourself) to:
+    1. Create a User account with Outerbounds if it doesn't exist
     2. Configure your local machine to run your flows on Outerbounds
-    3. Have a User account with Weights & Biases
-2. Python installed on your local machine
+2. Follow these [README instructions](../../src/mozmlops/templates/README.md#next-tracking-visualizing-and-evaluating-ml-experiments) to:
+    1. Have a User account with Weights & Biases
+3. Python is installed on your local machine
 
 #### Instructions to run
-1. Install requirements using command:
+1. Install the requirements using command:
     ```
     pip install -r requirements.example_image_classifier.txt
     ```
