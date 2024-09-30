@@ -14,10 +14,10 @@
 2. Python installed on your local machine
 
 #### Instructions to run
-1. Set the right GCP project and bucket in the flow where you want to upload the trained model to.
+1. Set the right GCP project and bucket in the [flow](./image_classifier_flow.py) where you want to upload the trained model to.
 2. Run this command on the terminal
    ```
-   WANDB_API_KEY=your_wandb_api_key WANDB_PROJECT=your_wandb_project python image_classifier.py --environment=pypi run --offline False
+   WANDB_API_KEY=your_wandb_api_key WANDB_PROJECT=your_wandb_project python image_classifier_flow.py --environment=pypi run --offline False
    ```
 
    Replace `your_wandb_api_key` and `your_wandb_project` with your details.
