@@ -14,12 +14,14 @@
 2. Python installed on your local machine
 
 #### Instructions to run
-1. Set the right GCP project and bucket in the [flow](./image_classifier_flow.py) where you want to upload the trained model to.
-2. Run this command on the terminal
+1. Install requirements using command:
+    ```
+    pip install -r requirements.example_image_classifier.txt
+    ```
+2. Set the right GCP project and bucket in the [flow](./image_classifier_flow.py) where you want to upload the trained model to.
+3. Run this command on the terminal (replace `your_wandb_api_key` and `your_wandb_project` with your details in this command):
    ```
    WANDB_API_KEY=your_wandb_api_key WANDB_PROJECT=your_wandb_project python image_classifier_flow.py --environment=pypi run --offline False
    ```
-
-   Replace `your_wandb_api_key` and `your_wandb_project` with your details.
 
    You can track the progress of the flow run on Outerbounds UI (see the url in your terminal logs).
