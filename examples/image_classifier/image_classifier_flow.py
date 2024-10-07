@@ -65,7 +65,7 @@ class ImageClassifierFlow(FlowSpec):
         packages={"torch": "2.4.1", "torchvision": "0.19.1", "mozmlops": "0.1.4"},
     )
     @nvidia
-    # @kubernetes
+    @kubernetes
     @card
     @environment(
         vars={
