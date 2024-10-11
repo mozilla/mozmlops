@@ -105,8 +105,7 @@ Deploying your Ray Serve app to production requires changes in 3 different repos
 4. Stop the Ray Serve app (kill the `serve run` process) after you are done with testing
 
 #### Create Dockerfile for your Ray Serve app
-> [!TIP]
-> Creating docker images is the [recommended way](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Containerization-of-Ray-Serve-application) to deploy Ray Serve apps to production.
+Creating docker images is the [recommended way](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Containerization-of-Ray-Serve-application) to deploy Ray Serve apps to production.
 
 Create a [Dockerfile](https://docs.docker.com/reference/dockerfile/) for your Ray Serve app and add it to the "application repo"
 
@@ -114,8 +113,7 @@ Create a [Dockerfile](https://docs.docker.com/reference/dockerfile/) for your Ra
 > The "deployment repo" will build docker image using the Dockerfile that you add to your "application repo".
 
 #### Create a Serve config for your Ray Serve app
-> [!TIP]
-> The Serve config is the [recommended way](https://docs.ray.io/en/latest/serve/configure-serve-deployment.html#specify-parameters-through-the-serve-config-file) to deploy and update Ray Serve apps in production.
+The Serve config is the [recommended way](https://docs.ray.io/en/latest/serve/configure-serve-deployment.html#specify-parameters-through-the-serve-config-file) to deploy and update Ray Serve apps in production.
 
 1. Auto-generate the Serve config file using [serve build](https://docs.ray.io/en/latest/serve/api/index.html#serve-build) command
 
