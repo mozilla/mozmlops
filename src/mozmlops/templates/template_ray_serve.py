@@ -13,8 +13,10 @@ from transformers import pipeline
 
 app = FastAPI()
 
+
 class TranslateRequest(BaseModel):
     text: str = Field(description="The text to translate")
+
 
 @serve.deployment()
 @serve.ingress(app)
@@ -32,5 +34,6 @@ class Translator:
         translation = model_output[0]["translation_text"]
 
         return translation
+
 
 translator_app = Translator.bind()
