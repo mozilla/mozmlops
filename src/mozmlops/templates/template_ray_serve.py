@@ -1,8 +1,14 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+# The original code in this file comes from the Ray serve documentation:
+# https://docs.ray.io/en/latest/serve/develop-and-deploy.html#convert-a-model-into-a-ray-serve-application
+
 from ray import serve
 
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
-
 from transformers import pipeline
 
 app = FastAPI()
@@ -26,12 +32,5 @@ class Translator:
         translation = model_output[0]["translation_text"]
 
         return translation
-
-'''
-def app_builder(args: Dict[str, str]) -> Application:
-    return Translator.bind(args)
-'''
-# TODO Uncomment the next line if attempting to autogenerate the config.
-#app = MozPilot.bind(args={})
 
 translator_app = Translator.bind()

@@ -85,7 +85,7 @@ Deploying your Ray Serve app to production requires changes in 3 different repos
 ### Steps in “application repo“
 
 > [!NOTE]
-> We will use the [template Ray Serve app](./template_ray_serve.py) in this repository to demonstrate the command usage in different steps below.
+> We will use the [template Ray Serve app](./template_ray_serve.py) in this repository to demonstrate the command usage in different steps below. The [original code](https://docs.ray.io/en/latest/serve/develop-and-deploy.html#convert-a-model-into-a-ray-serve-application) for this app comes from the Ray Serve documentation.
 
 #### Test your Ray Serve app locally
 Before you run an inference server in production, please make sure that your Ray Serve app runs locally without any issue. The steps to test the template Ray Serve app are as follows:
