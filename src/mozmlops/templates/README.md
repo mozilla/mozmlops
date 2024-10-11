@@ -2,9 +2,9 @@
 
 So you're a Mozillian with a machine learning model that needs production-grade infrastructure. Excellent! You've found the toolset for this. 
 
-We use deployed Metaflow flows with Outerbounds to do model orchestration, and we use Weights and Biases for experiment evaluation. 
+We use deployed Metaflow flows with Outerbounds to do model orchestration, Weights and Biases for experiment evaluation and Ray Serve to run inference servers in production (GKE).
 
-The templates in this repository will help you integrate with both.
+The templates in this repository will help you integrate with them.
 
 ## But first...you need some stuff.
 
@@ -78,3 +78,71 @@ We know this workaround fails to account for scheduling and scripts: we're worki
 > [!NOTE]  
 > We have changed `offline` here to false: hat means we _do_ want our flow to integrate with Weights and Biases!
 
+## Next: Running inference servers in Production
+
+Deploying your Ray Serve app to production requires changes in 3 different repositories: “application repo“, “function specific repo” and “deployment repo“. Please refer to the [glossary](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Steps-for-deployment) for details on these repositories.
+
+### Steps in “application repo“
+
+> [!NOTE]
+> We will use the [template Ray Serve app](./template_ray_serve.py) in this repository to demonstrate the command usage in different steps below.
+
+#### Test your Ray Serve app locally
+Before you run an inference server in production, please make sure that your Ray Serve app runs locally without any issue. The steps to test the template Ray Serve app are as follows:
+
+1. Install requirements
+
+    ```sh
+    pip install -r requirements-rayserve.txt
+    ```
+2. Run Ray Serve app locally using [serve run](https://docs.ray.io/en/latest/serve/api/index.html#serve-run) command
+
+    ```sh
+    serve run template_ray_serve:translator_app --route-prefix "/translate"
+    ```
+3. Check if the locally running service endpoint returns the expected response
+    ```sh
+    curl -i -d '{"text": "Hello world!"}' -X POST "http://127.0.0.1:8000/translate/" -H "Content-Type: application/json"
+    ```
+
+#### Containerize your Ray Serve app
+
+Creating Docker images is the [recommended way]((https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Containerization-of-Ray-Serve-application)) to deploy Ray Serve apps to production.
+
+1. Create a [Dockerfile](https://docs.docker.com/reference/dockerfile/) for your Ray Serve app and add it to the "application repo"
+
+    The Dockerfile for the template Ray Serve app is [here](./Dockerfile-rayserve).
+
+2. [_Optional but highly recommended_] Test if the containerized Ray Serve app works locally
+    1. Build the docker image locally using [docker build](https://docs.docker.com/reference/cli/docker/buildx/build/) command:
+    ```sh
+    docker build -t template_rayserve_image:v1 -f Dockerfile-rayserve .
+    ```
+    2. Run a container from the image using [docker run](https://docs.docker.com/reference/cli/docker/container/run/) command and start the Ray Serve app locally by running the [serve run](https://docs.ray.io/en/latest/serve/api/index.html#serve-run) command inside the container
+    ```sh
+    docker run -p 127.0.0.1:8000:8000 -p 127.0.0.1:8265:8265 --name template_rayserve_container --rm template_rayserve_image:v1 serve run -h 0.0.0.0 -p 8000 template_ray_serve:translator_app --route-prefix "/translate"
+    ```
+    3. Call the service endpoint and check if it returns the expected response for your Ray Serve app
+    ```sh
+    curl -i -d '{"text": "Hello world!"}' -X POST "http://127.0.0.1:8000/translate/" -H "Content-Type: application/json"
+    ```
+
+#### Create a Serve config for your Ray Serve app
+The [Serve config](https://docs.ray.io/en/latest/serve/production-guide/config.html#serve-config-files) is the [recommended way](https://docs.ray.io/en/latest/serve/configure-serve-deployment.html#specify-parameters-through-the-serve-config-file) to deploy and update Ray Serve apps in production.
+
+1. Auto-generate the Serve config file using [serve build](https://docs.ray.io/en/latest/serve/api/index.html#serve-build) command
+    ```sh
+    serve build template_ray_serve:translator_app -o serve_config.yaml
+    ```
+2. Tweak the auto-generated Serve config file (if needed) as per your Ray Serve app structure
+    Details on a Serve config file here. Please make sure the following:
+    1. `applications.runtime_env`: This should either be empty or this entry shouldn't exist
+    2. `applications.import_path`: Should be correctly set based on the location of your Ray Serve app code inside the container (see Containerize step above)
+    3. `applications.route_prefix`: Should be unique for your Ray Serve app on a Ray Cluster. It defaults to `/` and could be left as it is unless you are deploying multiple apps on a single Ray Cluster which is not recommended.
+
+3. Add this Serve config file to your “application repo”
+
+The Serve config file for the template Ray Serve app is [here](./serve_config.yaml).
+
+### Steps in “function specific repo” and “deployment repo“
+Please refer to [this guide]() regarding details on the steps in these 2 repos.

@@ -1,0 +1,38 @@
+# Base image
+#
+# There are 2 options to use base image:
+# 1. Use the base image provided by rayproject (https://docs.ray.io/en/latest/serve/production-guide/docker.html#extending-the-ray-docker-image)
+#    a. In this case, please use the base image corresponding to the architecture on which you are running the container because rayproject base
+#       images are not multi-platform images (https://hub.docker.com/r/rayproject/ray/tags).
+#       e.g "rayproject/ray:2.9.3" is meant to run on "amd64" architecture and "rayproject/ray:2.9.3-aarch64" runs on "arm64/v8" architecture
+#
+# 2. Start from some other base image and install ray[serve] explicitly
+#    a. Please make sure that the resulting containers can run as non-root as that is a requirement for running
+#       containers on Mozilla-managed infrastructure.
+#
+# In any case, the ray version in docker file should match the RayCluster version on Kubernetes for using this image in Kuberay as per this:
+# https://docs.ray.io/en/latest/serve/production-guide/docker.html#using-custom-docker-images-in-kuberay
+
+# Using the base image from rayproject here as the resulting containers run by default as non-root user which is a requirement for containers to
+# run on Mozilla-managed production infrastructure. Using "amd64" architecture variant of the base image here to match with the Mozilla-managed production
+# infrastructure
+FROM rayproject/ray:2.9.3
+
+# Install ray serve (skipping this as base image from rayproject is used above)
+#RUN pip install --no-cache-dir ray[serve]==2.9.3
+
+# Install dependencies for the Ray Serve app
+RUN pip install --no-cache-dir transformers==4.45.2
+RUN pip install --no-cache-dir torch==2.0.1
+
+# Set the working dir for the container to /serve_app
+WORKDIR /serve_app
+
+# Copy the project in /serve_app
+COPY template_ray_serve.py /serve_app/template_ray_serve.py
+
+# Ports that are intended to be published
+# Service port
+EXPOSE 8000
+# Ray Dashboard port
+EXPOSE 8265
