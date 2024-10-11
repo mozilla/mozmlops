@@ -80,16 +80,14 @@ We know this workaround fails to account for scheduling and scripts: we're worki
 
 ## Running inference servers in Production
 
-Deploying your Ray Serve app to production requires changes in 3 different repositories: “application repo“, “function specific repo” and “deployment repo“ ( please see [glossary](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Glossary) for details on these repositories).
+Deploying your Ray Serve app to production requires changes in 3 different repositories: “application repo“, “function specific repo” and “deployment repo“ (please see [glossary](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Glossary) for details on these repositories).
 
 ### Steps in “application repo“
 
 > [!NOTE]
-> We will use the [template Ray Serve app](./template_ray_serve.py) in this repository to demonstrate the command usage in different steps below. The [original code](https://docs.ray.io/en/latest/serve/develop-and-deploy.html#convert-a-model-into-a-ray-serve-application) for this app comes from the Ray Serve documentation.
+> We will use the [template Ray Serve app](./template_ray_serve.py) in this repository to demonstrate the command usage in this section. The [original code](https://docs.ray.io/en/latest/serve/develop-and-deploy.html#convert-a-model-into-a-ray-serve-application) for this app comes from the Ray Serve documentation.
 
 #### Test your Ray Serve app locally
-Before you run an inference server in production, please make sure that your Ray Serve app runs locally without any issue. The steps to test the template Ray Serve app are as follows:
-
 1. Install requirements
 
     ```sh
@@ -100,18 +98,20 @@ Before you run an inference server in production, please make sure that your Ray
     ```sh
     serve run template_ray_serve:translator_app --route-prefix "/translate"
     ```
-3. On a different terminal, call the locally running service endpoint and check if it returns the expected response for your Ray Serve app
+3. In a different terminal, call the locally running service endpoint and check if it returns the expected response for your Ray Serve app
     ```sh
     curl -i -d '{"text": "Hello world!"}' -X POST "http://127.0.0.1:8000/translate/" -H "Content-Type: application/json"
     ```
+4. Stop the Ray Serve app (kill the `serve run` process) after you are done with testing
 
 #### Create Dockerfile for your Ray Serve app
-Creating docker images is the [recommended way](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Containerization-of-Ray-Serve-application) to deploy Ray Serve apps to production.
+> [!TIP]
+> Creating docker images is the [recommended way](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Containerization-of-Ray-Serve-application) to deploy Ray Serve apps to production.
 
-1. Create a [Dockerfile](https://docs.docker.com/reference/dockerfile/) for your Ray Serve app and add it to the "application repo"
+Create a [Dockerfile](https://docs.docker.com/reference/dockerfile/) for your Ray Serve app and add it to the "application repo"
 
-The "deployment repo" will build docker image using the Dockerfile that you add to your "application repo".
-
+> [!IMPORTANT]
+> The "deployment repo" will build docker image using the Dockerfile that you add to your "application repo".
 
 #### Create a Serve config for your Ray Serve app
 The [Serve config](https://docs.ray.io/en/latest/serve/production-guide/config.html#serve-config-files) is the [recommended way](https://docs.ray.io/en/latest/serve/configure-serve-deployment.html#specify-parameters-through-the-serve-config-file) to deploy and update Ray Serve apps in production.
@@ -125,23 +125,26 @@ The [Serve config](https://docs.ray.io/en/latest/serve/production-guide/config.h
 
     Please make sure the following:
     1. `applications.runtime_env`: This should either be empty or this entry shouldn't exist
-    2. `applications.import_path`: Should be correctly set based on the location of your Ray Serve app code inside the container (see Containerize step above)
-    3. `applications.route_prefix`: Should be unique for your Ray Serve app on a Ray Cluster. It defaults to `/` and could be left as it is unless you are deploying multiple apps on a single Ray Cluster [which is not recommended](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Ray-Serve-application-to-Ray-Cluster-to-Kubernetes-cluster-mapping).
+    2. `applications.import_path`: This should be correctly set to the path to your top-level Serve deployment
+    3. `applications.route_prefix`: This should be unique for your Ray Serve app on a Ray Cluster. It defaults to `/` and could be left as it is OR you can add a route prefix.
 
 3. [_Optional but recommended_] Add this Serve config file to your “application repo”
 
 Here is the [Serve config file](./serve_config.yaml) for the template Ray Serve app.
 
-The content of the Serve config file will be used during the steps in “function specific repo”.
+> [! IMPORTANT]
+> The content of the Serve config file will be used during the steps in “function specific repo”.
 
 #### [_Optional but highly recommended_] Test containerized Ray Serve app locally
-As the contents of Serve config file and Dockerfile created in previous steps will be used for production deployment, it is highly recommended to test them locally first.
+The Serve config file contents and the Dockerfile created in previous steps will be used for production deployment. Therefore, it is highly recommended to test them locally first.
 
 1. Build the docker image locally using [docker build](https://docs.docker.com/reference/cli/docker/buildx/build/) command:
     ```sh
     docker build -t template_rayserve_image:v1 -f Dockerfile-rayserve .
     ```
 2. Run a container from the image using [docker run](https://docs.docker.com/reference/cli/docker/container/run/) command and start the Ray Serve app locally by running the [serve run](https://docs.ray.io/en/latest/serve/api/index.html#serve-run) command inside the container
+    It requires mounting the Serve config file inside the container.
+
     ```sh
     docker run --mount type=bind,source=${PWD}/serve_config.yaml,target=/serve_app/serve_config.yaml -p 127.0.0.1:8000:8000 -p 127.0.0.1:8265:8265 --name template_rayserve_container --rm template_rayserve_image:v1 serve run serve_config.yaml
     ```
