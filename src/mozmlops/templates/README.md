@@ -138,11 +138,11 @@ The [Serve config](https://docs.ray.io/en/latest/serve/production-guide/config.h
     Details on a Serve config file here. Please make sure the following:
     1. `applications.runtime_env`: This should either be empty or this entry shouldn't exist
     2. `applications.import_path`: Should be correctly set based on the location of your Ray Serve app code inside the container (see Containerize step above)
-    3. `applications.route_prefix`: Should be unique for your Ray Serve app on a Ray Cluster. It defaults to `/` and could be left as it is unless you are deploying multiple apps on a single Ray Cluster which is not recommended.
+    3. `applications.route_prefix`: Should be unique for your Ray Serve app on a Ray Cluster. It defaults to `/` and could be left as it is unless you are deploying multiple apps on a single Ray Cluster [which is not recommended](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Ray-Serve-application-to-Ray-Cluster-to-Kubernetes-cluster-mapping).
 
 3. Add this Serve config file to your “application repo”
 
 The Serve config file for the template Ray Serve app is [here](./serve_config.yaml).
 
 ### Steps in “function specific repo” and “deployment repo“
-Please refer to [this guide]() regarding details on the steps in these 2 repos.
+Please refer to [this guide](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Steps-in-%E2%80%9Cfunction-specific-repo%E2%80%9D-and-%E2%80%9Cdeployment-repo%E2%80%9C) regarding details on the steps in these 2 repos.
