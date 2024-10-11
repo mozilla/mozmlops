@@ -78,7 +78,7 @@ We know this workaround fails to account for scheduling and scripts: we're worki
 > [!NOTE]  
 > We have changed `offline` here to false: hat means we _do_ want our flow to integrate with Weights and Biases!
 
-## Running inference servers in Production
+## Running Inference Servers in Production
 
 Deploying your Ray Serve app to production requires changes in 3 different repositories: “application repo“, “function specific repo” and “deployment repo“ (please see [glossary](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Glossary) for details on these repositories).
 
@@ -98,7 +98,7 @@ Deploying your Ray Serve app to production requires changes in 3 different repos
     ```sh
     serve run template_ray_serve:translator_app --route-prefix "/translate"
     ```
-3. In a different terminal, call the locally running service endpoint and check if it returns the expected response for your Ray Serve app
+3. In a different terminal, call the locally running service endpoint and check if it returns the expected response
     ```sh
     curl -i -d '{"text": "Hello world!"}' -X POST "http://127.0.0.1:8000/translate/" -H "Content-Type: application/json"
     ```
@@ -132,23 +132,24 @@ The [Serve config](https://docs.ray.io/en/latest/serve/production-guide/config.h
 
 Here is the [Serve config file](./serve_config.yaml) for the template Ray Serve app.
 
-> [! IMPORTANT]
+> [!IMPORTANT]
 > The content of the Serve config file will be used during the steps in “function specific repo”.
 
 #### [_Optional but highly recommended_] Test containerized Ray Serve app locally
-The Serve config file contents and the Dockerfile created in previous steps will be used for production deployment. Therefore, it is highly recommended to test them locally first.
+As the Serve config file contents and the Dockerfile created in the previous steps will be used for production deployment, it is highly recommended to test them locally first.
 
 1. Build the docker image locally using [docker build](https://docs.docker.com/reference/cli/docker/buildx/build/) command:
     ```sh
     docker build -t template_rayserve_image:v1 -f Dockerfile-rayserve .
     ```
 2. Run a container from the image using [docker run](https://docs.docker.com/reference/cli/docker/container/run/) command and start the Ray Serve app locally by running the [serve run](https://docs.ray.io/en/latest/serve/api/index.html#serve-run) command inside the container
+
     It requires mounting the Serve config file inside the container.
 
     ```sh
     docker run --mount type=bind,source=${PWD}/serve_config.yaml,target=/serve_app/serve_config.yaml -p 127.0.0.1:8000:8000 -p 127.0.0.1:8265:8265 --name template_rayserve_container --rm template_rayserve_image:v1 serve run serve_config.yaml
     ```
-3. On a different terminal, call the service endpoint and check if it returns the expected response for your Ray Serve app
+3. On a different terminal, call the service endpoint and check if it returns the expected response
     ```sh
     curl -i -d '{"text": "Hello world!"}' -X POST "http://127.0.0.1:8000/translate/" -H "Content-Type: application/json"
     ```
