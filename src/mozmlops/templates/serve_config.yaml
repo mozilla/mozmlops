@@ -1,4 +1,5 @@
 # This file was generated using the `serve build` command on Ray v2.9.3.
+# It was further tweaked to adapt it to the template Ray Serve app in this repository.
 
 proxy_location: EveryNode
 
