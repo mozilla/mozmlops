@@ -78,7 +78,7 @@ We know this workaround fails to account for scheduling and scripts: we're worki
 > [!NOTE]  
 > We have changed `offline` here to false: hat means we _do_ want our flow to integrate with Weights and Biases!
 
-## Next: Running inference servers in Production
+## Running inference servers in Production
 
 Deploying your Ray Serve app to production requires changes in 3 different repositories: “application repo“, “function specific repo” and “deployment repo“. Please refer to the [glossary](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Glossary) for details on these repositories.
 
@@ -115,14 +115,17 @@ Creating Docker images is the [recommended way](https://mozilla-hub.atlassian.ne
 
 2. [_Optional but highly recommended_] Test if the containerized Ray Serve app works locally
     1. Build the docker image locally using [docker build](https://docs.docker.com/reference/cli/docker/buildx/build/) command:
+
         ```sh
         docker build -t template_rayserve_image:v1 -f Dockerfile-rayserve .
         ```
     2. Run a container from the image using [docker run](https://docs.docker.com/reference/cli/docker/container/run/) command and start the Ray Serve app locally by running the [serve run](https://docs.ray.io/en/latest/serve/api/index.html#serve-run) command inside the container
+
         ```sh
         docker run -p 127.0.0.1:8000:8000 -p 127.0.0.1:8265:8265 --name template_rayserve_container --rm template_rayserve_image:v1 serve run -h 0.0.0.0 -p 8000 template_ray_serve:translator_app --route-prefix "/translate"
         ```
     3. Call the service endpoint and check if it returns the expected response for your Ray Serve app
+
         ```sh
         curl -i -d '{"text": "Hello world!"}' -X POST "http://127.0.0.1:8000/translate/" -H "Content-Type: application/json"
         ```
@@ -131,6 +134,7 @@ Creating Docker images is the [recommended way](https://mozilla-hub.atlassian.ne
 The [Serve config](https://docs.ray.io/en/latest/serve/production-guide/config.html#serve-config-files) is the [recommended way](https://docs.ray.io/en/latest/serve/configure-serve-deployment.html#specify-parameters-through-the-serve-config-file) to deploy and update Ray Serve apps in production.
 
 1. Auto-generate the Serve config file using [serve build](https://docs.ray.io/en/latest/serve/api/index.html#serve-build) command
+
     ```sh
     serve build template_ray_serve:translator_app -o serve_config.yaml
     ```
