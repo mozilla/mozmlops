@@ -114,7 +114,8 @@ Create a [Dockerfile](https://docs.docker.com/reference/dockerfile/) for your Ra
 > The "deployment repo" will build docker image using the Dockerfile that you add to your "application repo".
 
 #### Create a Serve config for your Ray Serve app
-The [Serve config](https://docs.ray.io/en/latest/serve/production-guide/config.html#serve-config-files) is the [recommended way](https://docs.ray.io/en/latest/serve/configure-serve-deployment.html#specify-parameters-through-the-serve-config-file) to deploy and update Ray Serve apps in production.
+> [!TIP]
+> The Serve config is the [recommended way](https://docs.ray.io/en/latest/serve/configure-serve-deployment.html#specify-parameters-through-the-serve-config-file) to deploy and update Ray Serve apps in production.
 
 1. Auto-generate the Serve config file using [serve build](https://docs.ray.io/en/latest/serve/api/index.html#serve-build) command
 
@@ -123,7 +124,7 @@ The [Serve config](https://docs.ray.io/en/latest/serve/production-guide/config.h
     ```
 2. Tweak the auto-generated Serve config file (if needed) as per your Ray Serve app requirements in production
 
-    Please make sure the following:
+    Details on the Serve config file can be found [here](https://docs.ray.io/en/latest/serve/production-guide/config.html#serve-config-files). Please make sure the following:
     1. `applications.runtime_env`: This should either be empty or this entry shouldn't exist
     2. `applications.import_path`: This should be correctly set to the path to your top-level Serve deployment
     3. `applications.route_prefix`: This should be unique for your Ray Serve app on a Ray Cluster. It defaults to `/` and could be left as it is OR you can add a route prefix.
