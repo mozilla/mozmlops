@@ -1,3 +1,4 @@
 env/
 __pycache__
 *.pyc
+examples/image_classifier/env_example_imageclassifier/
