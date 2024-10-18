@@ -80,7 +80,7 @@ We know this workaround fails to account for scheduling and scripts: we're worki
 
 ## Running Inference Servers in Production
 
-Deploying your Ray Serve app to production requires changes in 3 different repositories: “application repo“, “function specific repo” and “deployment repo“ (please see [glossary](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Glossary) for details on these repositories).
+Deploying your Ray Serve app to production requires changes in 3 different repositories: “application repo“, “function specific repo” and “deployment repo“ (please see [glossary](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Glossary) for details on these repositories). However, developing your Ray Serve app locally involves only "application repo".
 
 ### Steps in “application repo“
 
@@ -113,7 +113,7 @@ Create a [Dockerfile](https://docs.docker.com/reference/dockerfile/) for your Ra
 > The "deployment repo" will build docker image using the Dockerfile that you add to your "application repo".
 
 #### Create a Serve config for your Ray Serve app
-The Serve config is the [recommended way](https://docs.ray.io/en/latest/serve/configure-serve-deployment.html#specify-parameters-through-the-serve-config-file) to deploy and update Ray Serve apps in production.
+The Serve config is the [recommended way](https://docs.ray.io/en/latest/serve/production-guide/config.html#serve-config-files) to deploy and update Ray Serve apps in production.
 
 1. Auto-generate the Serve config file using [serve build](https://docs.ray.io/en/latest/serve/api/index.html#serve-build) command
 

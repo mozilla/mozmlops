@@ -1,6 +1,6 @@
 # Common dependencies to run any Ray Serve app
 ray[serve]==2.9.3
 
-# Dependencies specific to the Ray Serve app (template Ray Serve app of this repository in this case)
+# Dependencies specific to the Ray Serve app in this repository
 transformers==4.45.2
 torch==2.4.1

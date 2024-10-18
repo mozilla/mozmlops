@@ -1,5 +1,5 @@
 # This file was generated using the `serve build` command on Ray v2.9.3.
-# It was further tweaked to adapt it to the template Ray Serve app in this repository.
+# It was further tweaked (see comments at tweaked sites below) to adapt it to the template Ray Serve app in this repository.
 
 proxy_location: EveryNode
 
@@ -18,8 +18,8 @@ logging_config:
   enable_access_log: true
 
 applications:
-- name: en_fr_translator
-  route_prefix: /translate
+- name: en_fr_translator # changed auto generated value to assign a meaningful name for the app
+  route_prefix: /translate # changed auto generated value to assign the right route prefix for the app
   import_path: template_ray_serve:translator_app
   runtime_env: {}
   deployments:
