@@ -2,9 +2,9 @@
 
 So you're a Mozillian with a machine learning model that needs production-grade infrastructure. Excellent! You've found the toolset for this. 
 
-We use deployed Metaflow flows with Outerbounds to do model orchestration, and we use Weights and Biases for experiment evaluation. 
+We use deployed Metaflow flows with Outerbounds to do model orchestration, Weights and Biases for experiment evaluation and Ray Serve to run inference servers in production (GKE).
 
-The templates in this repository will help you integrate with both.
+The templates in this repository will help you integrate with them.
 
 ## But first...you need some stuff.
 
@@ -78,3 +78,81 @@ We know this workaround fails to account for scheduling and scripts: we're worki
 > [!NOTE]  
 > We have changed `offline` here to false: hat means we _do_ want our flow to integrate with Weights and Biases!
 
+## Running Inference Servers in Production
+
+Deploying your Ray Serve app to production requires changes in 3 different repositories: “application repo“, “function specific repo” and “deployment repo“ (please see [glossary](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Glossary) for details on these repositories). However, developing your Ray Serve app locally involves only "application repo".
+
+### Steps in “application repo“
+
+> [!NOTE]
+> We will use the [template Ray Serve app](./template_ray_serve.py) in this repository to demonstrate the command usage in this section. The [original code](https://docs.ray.io/en/latest/serve/develop-and-deploy.html#convert-a-model-into-a-ray-serve-application) for this app comes from the Ray Serve documentation.
+
+#### Test your Ray Serve app locally
+1. Install requirements
+
+    ```sh
+    pip install -r requirements-rayserve.txt
+    ```
+2. Run Ray Serve app locally using [serve run](https://docs.ray.io/en/latest/serve/api/index.html#serve-run) command
+
+    ```sh
+    serve run template_ray_serve:translator_app --route-prefix "/translate"
+    ```
+3. In a different terminal, call the locally running service endpoint and check if it returns the expected response
+    ```sh
+    curl -i -d '{"text": "Hello world!"}' -X POST "http://127.0.0.1:8000/translate/" -H "Content-Type: application/json"
+    ```
+4. Stop the Ray Serve app (kill the `serve run` process) after you are done with testing
+
+#### Create Dockerfile for your Ray Serve app
+Creating docker images is the [recommended way](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Containerization-of-Ray-Serve-application) to deploy Ray Serve apps to production.
+
+Create a [Dockerfile](https://docs.docker.com/reference/dockerfile/) for your Ray Serve app and add it to the "application repo"
+
+> [!IMPORTANT]
+> The "deployment repo" will build docker image using the Dockerfile that you add to your "application repo".
+
+#### Create a Serve config for your Ray Serve app
+The Serve config is the [recommended way](https://docs.ray.io/en/latest/serve/production-guide/config.html#serve-config-files) to deploy and update Ray Serve apps in production.
+
+1. Auto-generate the Serve config file using [serve build](https://docs.ray.io/en/latest/serve/api/index.html#serve-build) command
+
+    ```sh
+    serve build template_ray_serve:translator_app -o serve_config.yaml
+    ```
+2. Tweak the auto-generated Serve config file (if needed) as per your Ray Serve app requirements in production
+
+    Details on the Serve config file can be found [here](https://docs.ray.io/en/latest/serve/production-guide/config.html#serve-config-files). Please make sure the following:
+    1. `applications.runtime_env`: This should either be empty or this entry shouldn't exist
+    2. `applications.import_path`: This should be correctly set to the path to your top-level Serve deployment
+    3. `applications.route_prefix`: This should be unique for your Ray Serve app on a Ray Cluster. It defaults to `/` and could be left as it is OR you can add a route prefix.
+
+3. [_Optional but recommended_] Add this Serve config file to your “application repo”
+
+Here is the [Serve config file](./serve_config.yaml) for the template Ray Serve app.
+
+> [!IMPORTANT]
+> The content of the Serve config file will be used during the steps in “function specific repo”.
+
+#### [_Optional but highly recommended_] Test containerized Ray Serve app locally
+As the Serve config file contents and the Dockerfile created in the previous steps will be used for production deployment, it is highly recommended to test them locally first.
+
+1. Build the docker image locally using [docker build](https://docs.docker.com/reference/cli/docker/buildx/build/) command:
+    ```sh
+    docker build -t template_rayserve_image:v1 -f Dockerfile-rayserve .
+    ```
+2. Run a container from the image using [docker run](https://docs.docker.com/reference/cli/docker/container/run/) command and start the Ray Serve app locally by running the [serve run](https://docs.ray.io/en/latest/serve/api/index.html#serve-run) command inside the container
+
+    It requires mounting the Serve config file inside the container.
+
+    ```sh
+    docker run --mount type=bind,source=${PWD}/serve_config.yaml,target=/serve_app/serve_config.yaml -p 127.0.0.1:8000:8000 -p 127.0.0.1:8265:8265 --name template_rayserve_container --rm template_rayserve_image:v1 serve run serve_config.yaml
+    ```
+3. On a different terminal, call the service endpoint and check if it returns the expected response
+    ```sh
+    curl -i -d '{"text": "Hello world!"}' -X POST "http://127.0.0.1:8000/translate/" -H "Content-Type: application/json"
+    ```
+4. Stop the Ray Serve app (kill the running container) after you are done with testing
+
+### Steps in “function specific repo” and “deployment repo“
+Please refer to [this guide](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Steps-in-%E2%80%9Cfunction-specific-repo%E2%80%9D-and-%E2%80%9Cdeployment-repo%E2%80%9C) regarding details on the steps in these 2 repos.
