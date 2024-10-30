@@ -155,7 +155,7 @@ As the Serve config file contents and the Dockerfile created in the previous ste
 
 1. Build the docker image locally using [docker build](https://docs.docker.com/reference/cli/docker/buildx/build/) command:
     ```sh
-    docker build -t template_rayserve_image:v1 -f Dockerfile-metaflow-rayserve .
+    docker build -t template_rayserve_image:v1 -f Dockerfile-rayserve .
     ```
 2. Run a container from the image using [docker run](https://docs.docker.com/reference/cli/docker/container/run/) command and start the Ray Serve app locally by running the [serve run](https://docs.ray.io/en/latest/serve/api/index.html#serve-run) command inside the container
 
