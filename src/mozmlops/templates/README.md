@@ -58,13 +58,13 @@ Flows in Metaflow permit you to include dependencies in each of your steps in tw
 
 1. Adding the `@pypi` or `@conda` decorator and installing dependencies as each step runs ([documentation here](https://docs.metaflow.org/scaling/dependencies/libraries))
 2. Using a custom docker image with your dependencies in it, as described in [this documentation](https://docs.metaflow.org/scaling/dependencies/containers)
-   3. An important note: the above linked documentation says you can use docker images and the pypi and conda decorators together. According to the maintainers of the Outerbounds product that we use at Mozilla, this does not function as documented; instead, both the pypi and conda decorators start from a fresh environment. So if you specify _both_, the flow will _run_, but it will _fail_ if you try to import something in the step that exclusively lives in the docker image. As of August 2024, the Mozilla MLOps team has confirmed this behavior.
+   3. An important note: the above linked documentation says you can use docker images and the pypi and conda decorators together. According to the maintainers of the Outerbounds product that we use at Mozilla, this does not function as documented; instead, the pypi and conda decorators start from a fresh environment. So if you add one of the `@conda` or `@pypi` decorators _and also_ specify an `image` in the `kubernetes` decorator arguments, the flow will _run_, but it will _fail_ if you try to import something in the step that exclusively lives in the docker image. As of August 2024, the Mozilla MLOps team has confirmed this behavior.
 
 If you'd like to use a docker image, you can create your own custom image, push it to [Docker Hub](https://hub.docker.com/_/registry), and then pull it down by URL in your flow by decorating a step with:
 ```commandLine
 @kubernetes(image='url/of/your/image:tag')
 ```
-You can see an example Dockerfile here in this templates directory.
+You can see an example Dockerfile [here](`Dockerfile-metaflow`) in this templates directory.
 
 Please note that if your step should use our NVIDIA GPUs, it cannot use a docker image at present, as the Outerbounds `@nvidia` decorator does not interoperate with docker image specification. In this case, please use the `@pypi` and `@conda` decorators for dependencies as documented above.
 
@@ -155,7 +155,7 @@ As the Serve config file contents and the Dockerfile created in the previous ste
 
 1. Build the docker image locally using [docker build](https://docs.docker.com/reference/cli/docker/buildx/build/) command:
     ```sh
-    docker build -t template_rayserve_image:v1 -f Dockerfile-rayserve .
+    docker build -t template_rayserve_image:v1 -f Dockerfile-metaflow-rayserve .
     ```
 2. Run a container from the image using [docker run](https://docs.docker.com/reference/cli/docker/container/run/) command and start the Ray Serve app locally by running the [serve run](https://docs.ray.io/en/latest/serve/api/index.html#serve-run) command inside the container
 

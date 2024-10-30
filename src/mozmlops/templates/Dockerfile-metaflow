@@ -13,8 +13,8 @@ FROM --platform=linux/amd64 python:3.10.11-bullseye
 # the application crashes without emitting any logs due to buffering.
 ENV PYTHONUNBUFFERED=1
 
-# Puts the dependencies from these two requirements lists into the Docker environment for installation
+# Puts the dependencies from this requirement list into the Docker environment for installation
 COPY requirements.outerbounds.txt requirements.outerbounds.txt
 
 # Installs aforementioned dependencies
-RUN python -m pip install -r requirements.txt 
+RUN python -m pip install -r requirements.outerbounds.txt
