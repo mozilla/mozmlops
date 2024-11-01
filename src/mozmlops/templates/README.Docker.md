@@ -32,7 +32,7 @@ In order to make an updated image available at a URL, you'll need to push it som
 
 Then, change and update the image as follows:
 
-1. Tweak the [`Dockerfile`](Dockerfile) as needed.
+1. Tweak the [`Dockerfile`](Dockerfile-metaflow) as needed.
 2. Build the image: `docker build -t mlops-copilot-demo:<TAG> .` where `<TAG>` is an identifier
 used to version the image, for example `v3`.
 3. Run `docker images` to find the built image and its id.
