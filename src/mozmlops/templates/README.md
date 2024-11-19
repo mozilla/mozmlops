@@ -68,6 +68,20 @@ You can see an example Dockerfile [here](Dockerfile-metaflow) in this templates 
 
 Please note that if your step should use our NVIDIA GPUs, it cannot use a docker image at present, as the Outerbounds `@nvidia` decorator does not interoperate with docker image specification. In this case, please use the `@pypi` and `@conda` decorators for dependencies as documented above.
 
+ ## Using Vertex AI with Model Orchestration Flows
+
+These flows work in Vertex AI Workbench (which some teams at Mozilla use for cloud-based notebook experimentation: it's Google's answer to AWS Sagemaker.) You can put `some_flow.py` into your workbench and run it from a terminal tab in the workbench.
+
+You can also incorporate flow runs into your Jupyter notebooks. [This Runner syntax](https://docs.metaflow.org/api/runner) facilitates calling a flow from a notebook. Alternatively, Outerbounds' [metaflow-card-notebook](https://github.com/outerbounds/metaflow-card-notebook) module facilitates running notebooks from a DAG.
+
+[This documentation from Google](https://cloud.google.com/vertex-ai/docs/general/vpc-standalone) explains the steps you'll likely want to take in setting up your Vertex AI instance:
+- Creating a Virtual Private Cloud for the instance
+- Giving it a GCS bucket and storing a startup script there for cloning your code 
+- Assigning permissions to your instance
+- Scheduling instance setup/teardown (the instances cost money to run, so you only want them running when you are using them.)
+
+
+
  ## Next: Tracking, Visualizing, and Evaluating ML Experiments
 
 An admin from Mozilla’s MLOps team needs to set you up with your team on Weights and Biases.[Ask them to add you](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/471010754/Getting+a+Weights+and+Biases+account), and then once they do, you can click through to the invitation to create your Weights and Biases account.
