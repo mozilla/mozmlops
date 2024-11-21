@@ -6,6 +6,7 @@
 # https://docs.ray.io/en/latest/serve/develop-and-deploy.html#convert-a-model-into-a-ray-serve-application
 
 from ray import serve
+from ray.serve import Application
 
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
@@ -14,6 +15,9 @@ from typing import List, Dict, Any
 
 app = FastAPI()
 
+class BatchedTranslatorArgs(BaseModel):
+    task: str = Field(description="The task parameter of the transformers.TranslationPipeline")
+    model: str = Field(description="The model parameter of the transformers.TranslationPipeline")
 
 class TranslateRequest(BaseModel):
     text: str = Field(description="The text to translate")
@@ -22,9 +26,9 @@ class TranslateRequest(BaseModel):
 @serve.deployment()
 @serve.ingress(app)
 class BatchedTranslator:
-    def __init__(self):
+    def __init__(self, task: str, model: str):
         # Load model
-        self.model = pipeline("translation_en_to_fr", model="t5-small")
+        self.model = pipeline(task, model)
 
     # `batch_wait_timeout_s`: Controls how long Serve should wait for a batch once the first request arrives.
     # `max_batch_size`      : Controls the size of the batch. Once the first request arrives, @serve.batch decorator will wait for a
@@ -58,5 +62,6 @@ class BatchedTranslator:
         self._batched_translate_handler.set_max_batch_size(user_config["max_batch_size"])
         self._batched_translate_handler.set_batch_wait_timeout_s(user_config["batch_wait_timeout_s"])
 
-
-batched_translator_app = BatchedTranslator.bind()
+# Ray Serve Application builder
+def batched_translator_app_builder(args: BatchedTranslatorArgs) -> Application:
+    return BatchedTranslator.bind(args.task, args.model)
