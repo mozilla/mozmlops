@@ -1,0 +1,6 @@
+# Common dependencies to run any Ray Serve app
+ray[serve]==2.9.3
+
+# Dependencies specific to the batched translator Ray Serve app in `examples` folder
+transformers==4.45.2
+torch==2.4.1
