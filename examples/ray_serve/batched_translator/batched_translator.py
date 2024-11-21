@@ -15,9 +15,15 @@ from typing import List, Dict, Any
 
 app = FastAPI()
 
+
 class BatchedTranslatorArgs(BaseModel):
-    task: str = Field(description="The task parameter of the transformers.TranslationPipeline")
-    model: str = Field(description="The model parameter of the transformers.TranslationPipeline")
+    task: str = Field(
+        description="The task parameter of the transformers.TranslationPipeline"
+    )
+    model: str = Field(
+        description="The model parameter of the transformers.TranslationPipeline"
+    )
+
 
 class TranslateRequest(BaseModel):
     text: str = Field(description="The text to translate")
@@ -42,29 +48,37 @@ class BatchedTranslator:
 
         # Run inference
         model_outputs = self.model(inputs)
-        print ("model_outputs:", model_outputs)
+        print("model_outputs:", model_outputs)
 
         # Post-process output to return only the translation text
-        translations = [model_output["translation_text"] for model_output in model_outputs]
-        print ("translations:", translations)
+        translations = [
+            model_output["translation_text"] for model_output in model_outputs
+        ]
+        print("translations:", translations)
 
         return translations
 
     @app.post("/")
     async def translate(self, translate_request: TranslateRequest) -> str:
         result = await self._batched_translate_handler(translate_request.text)
-        print ("result:", result)
+        print("result:", result)
         return result
 
     # This function allows dynamically changing parameters without restarting replicas
     # https://docs.ray.io/en/latest/serve/production-guide/config.html#dynamically-change-parameters-without-restarting-replicas-user-config
     def reconfigure(self, user_config: Dict[str, Any]):
-        self._batched_translate_handler.set_max_batch_size(user_config["max_batch_size"])
-        self._batched_translate_handler.set_batch_wait_timeout_s(user_config["batch_wait_timeout_s"])
+        self._batched_translate_handler.set_max_batch_size(
+            user_config["max_batch_size"]
+        )
+        self._batched_translate_handler.set_batch_wait_timeout_s(
+            user_config["batch_wait_timeout_s"]
+        )
+
 
 # Ray Serve Application builder
 def batched_translator_app_builder(args: BatchedTranslatorArgs) -> Application:
     return BatchedTranslator.bind(args.task, args.model)
 
+
 # Un-comment the following line ONLY to auto-generate Serve config file using `serve build` command and then comment it back again
-#batched_translator_app = BatchedTranslator.bind()
+# batched_translator_app = BatchedTranslator.bind()
