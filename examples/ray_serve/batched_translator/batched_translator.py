@@ -65,3 +65,6 @@ class BatchedTranslator:
 # Ray Serve Application builder
 def batched_translator_app_builder(args: BatchedTranslatorArgs) -> Application:
     return BatchedTranslator.bind(args.task, args.model)
+
+# Un-comment the following line ONLY to auto-generate Serve config file using `serve build` command and then comment it back again
+#batched_translator_app = BatchedTranslator.bind()
