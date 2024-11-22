@@ -80,5 +80,7 @@ def batched_translator_app_builder(args: BatchedTranslatorArgs) -> Application:
     return BatchedTranslator.bind(args.task, args.model)
 
 
-# Un-comment the following line ONLY to auto-generate Serve config file using `serve build` command and then comment it back again
+# IFF you want to auto-generate Serve config file (using `serve build` command) then uncomment the next statement, auto-generate the Serve config
+# file and then comment it back again. Please note that the Serve config file for this app is already generated. If you are only running this app
+# following the README then you don't need to change anything here.
 # batched_translator_app = BatchedTranslator.bind()

@@ -22,9 +22,9 @@
     ```sh
     serve run serve_config.yaml
     ```
-4. From separate terminals, let multiple clients call the locally running service endpoint and check if it returns the expected response
+4. Call the locally running service endpoint and check if it returns the expected response
    > [!NOTE]
-   > You can use the following curl command to send a request (you can modify the text to be translated for each request)
+   > You can either use the curl command given below to send a request (you can modify the text to be translated for each request) from separate terminal or you can go to http://127.0.0.1:8000/translate/docs in your browser and send a request via the interactive request console there.
 
     ```sh
     curl -i -d '{"text": "Hello world!"}' -X POST "http://127.0.0.1:8000/translate/" -H "Content-Type: application/json"
