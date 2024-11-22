@@ -35,3 +35,5 @@
     ```sh
     deactivate
     ```
+
+Please refer to the [Troubleshooting](../../README.troubleshooting.md) guide for the known issues and how to resolve them.
