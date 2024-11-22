@@ -68,6 +68,9 @@ You can see an example Dockerfile [here](Dockerfile-metaflow) in this templates 
 
 Please note that if your step should use our NVIDIA GPUs, it cannot use a docker image at present, as the Outerbounds `@nvidia` decorator does not interoperate with docker image specification. In this case, please use the `@pypi` and `@conda` decorators for dependencies as documented above.
 
+> [!IMPORTANT]
+> Please refer to the [Troubleshooting](../../README.troubleshooting.md) guide for the known issues and how to resolve them.
+
  ## Next: Tracking, Visualizing, and Evaluating ML Experiments
 
 An admin from Mozilla’s MLOps team needs to set you up with your team on Weights and Biases.[Ask them to add you](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/471010754/Getting+a+Weights+and+Biases+account), and then once they do, you can click through to the invitation to create your Weights and Biases account.
