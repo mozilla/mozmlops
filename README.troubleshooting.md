@@ -39,7 +39,7 @@ Note that @pypi does not currently support source distributions
 
 **Solution:**
 
-This error happens when your Flow depends on a package that is only available as a [source distribution](https://packaging.python.org/en/latest/guides/distributing-packages-using-setuptools/#source-distributions) which [`@pypi` decorator doesn't support](https://mozilla.slack.com/archives/C06FVTXAHV2/p1731432243488969?thread_ts=1731020593.058739&cid=C06FVTXAHV2). The workaround is:
+This error happens when your Flow depends on a package that is only available as a [source distribution](https://packaging.python.org/en/latest/guides/distributing-packages-using-setuptools/#source-distributions) which [`@pypi` decorator doesn't support](https://docs.metaflow.org/api/step-decorators/pypi). The way to resolve this is:
 - Create a custom docker image with all of your Flow's dependencies, push that up on a registry (see [README.Docker.md](./src/mozmlops/templates/README.Docker.md) for reference) and then pull it down via the `image` argument of `@kubernetes` decorator. The caveat is that custom docker images are not yet supported on NVIDIA cloud (i.e. `@nvidia` decorator).
 
 ### Issue 4: Out of Memory error (Task finished with exit code 137)
