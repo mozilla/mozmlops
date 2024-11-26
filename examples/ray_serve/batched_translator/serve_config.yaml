@@ -1,0 +1,32 @@
+# This file was generated using the `serve build` command on Ray v2.9.3.
+# It was further tweaked (see comments at tweaked sites below) to adapt it to the batched translator Ray Serve app.
+
+proxy_location: EveryNode
+
+http_options:
+  host: 0.0.0.0
+  port: 8000
+
+grpc_options:
+  port: 9000
+  grpc_servicer_functions: []
+
+logging_config:
+  encoding: TEXT
+  log_level: INFO
+  logs_dir: null
+  enable_access_log: true
+
+applications:
+- name: batched_en_fr_translator # changed auto generated value to assign a meaningful name for the app
+  route_prefix: /translate # changed auto generated value to assign the right route prefix for the app
+  import_path: batched_translator:batched_translator_app_builder # changed auto generated value to set the application builder for the app
+  args: # added this entire key to pass args to the Application
+    task: "translation_en_to_fr"
+    model: "t5-small"
+  runtime_env: {}
+  deployments:
+  - name: BatchedTranslator
+    user_config: # added this entire key to pass batch configuration to the BatchedTranslator Deployment
+      max_batch_size: 8
+      batch_wait_timeout_s: 1
