@@ -48,6 +48,15 @@ jobs:
             export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp.json"
             echo "$GCLOUD_SERVICE_KEY" > "$GOOGLE_APPLICATION_CREDENTIALS"
             poetry run pytest -m integration
+      - run:
+          name: "Running a flow"
+          # These commands load our application credentials from the service account
+          # So that we can run the integration tests.
+          # See https://cloud.google.com/docs/authentication/production
+          command: |
+            outerbounds configure $OB_DEFAULT_PERIMETER_CONFIG_KEY
+            cd src/mozmlops/templates
+            python template_flow.py --no-pylint run 
 
 
 # Orchestrate jobs using workflows
