@@ -54,9 +54,9 @@ jobs:
           # So that we can run the integration tests.
           # See https://cloud.google.com/docs/authentication/production
           command: |
-            outerbounds configure $OB_DEFAULT_PERIMETER_CONFIG_KEY
+            poetry run outerbounds configure $OB_DEFAULT_PERIMETER_CONFIG_KEY
             cd src/mozmlops/templates
-            python template_flow.py --no-pylint run 
+            poetry run python template_flow.py --no-pylint run 
 
 
 # Orchestrate jobs using workflows
