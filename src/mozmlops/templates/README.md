@@ -83,6 +83,25 @@ You can also incorporate flow runs into your Jupyter notebooks. [This Runner syn
 - Assigning permissions to your instance
 - Scheduling instance setup/teardown (the instances cost money to run, so you only want them running when you are using them.)
 
+ ## Integrating Model Orchestration Flows into CI
+
+You can kick off a model training flow, or even deploy changes to a regularly scheduled workflow, as part of your CI job! 
+
+Steps: 
+
+1. Get ahold of your Outerbounds configuration key. If you replace YOUR-PERIMETER with the name of your perimeter in this URL (https://ui.desertowl.obp.outerbounds.com/dashboard/myworkspace/YOUR-PERIMETER/setup), you'll see a page with some CLI commands on it. The second one is `outerbounds configure YOUR-CONFIGURATION-KEY`. That's where you get that key.
+2. Make that key an environment variable in your CircleCI configuration ([CircleCI docs on how to do this](https://circleci.com/docs/env-vars/).)
+3. Add a step in your `circleci/config.yaml` file to set up outerbounds on your CI machine. Here's an example:
+
+```yaml
+  ob_setup:
+    steps:
+      - run:
+          name: configure ob
+          command: outerbounds configure $OB_CONFIG_KEY
+```
+4. Add another step in your `circleci/config.yaml` file with the command you run on your command line to run your flow, trigger your flow on argo-workflows, or create a scheduled flow! Note: if you run the command `flow.py argo-workflows create` and your perimeter already has a `flow.py` argo-workflow, the command will overwrite that flow with the new flow. This is really convenient if what you want is, indeed, to replace the old version of your scheduled flow with a new one.
+
  ## Next: Tracking, Visualizing, and Evaluating ML Experiments
 
 An admin from Mozilla’s MLOps team needs to set you up with your team on Weights and Biases.[Ask them to add you](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/471010754/Getting+a+Weights+and+Biases+account), and then once they do, you can click through to the invitation to create your Weights and Biases account.
