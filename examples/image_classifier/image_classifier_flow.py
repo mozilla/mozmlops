@@ -149,7 +149,9 @@ class ImageClassifierFlow(FlowSpec):
         if not self.offline_wandb:
             # Save trained model locally and then track it in W&B
             torch.save(image_classifier_model.state_dict(), "./trained_model.pt")
-            model_artifact = wandb.Artifact(name="trained_image_classifier", type="model")
+            model_artifact = wandb.Artifact(
+                name="trained_image_classifier", type="model"
+            )
             model_artifact.add_file(local_path="./trained_model.pt")
             tracking_run.log_artifact(model_artifact)
 
