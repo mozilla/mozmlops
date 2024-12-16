@@ -1,14 +1,7 @@
-In the case of successful deployment, you should see:
 
-     N/N Runningwhen you get pods for your deployments.
+## If you see a redis cleanup pod hanging there in the cluster for your deployment... 
 
-    3 entries when you get services: ...-ray-head-svc, ...-ray-serve-svc and ...-ray-raycluster-xxx-head-svc.
-
-If not, you have problems.
-Debugging Tips
-Redis cleanup pod
-
-If you see a redis cleanup pod hanging there in the cluster for your deployment, it means some redis error has happened during killing your pod. In this case, do:
+it means some redis error has happened during killing your pod. In this case, do:
 
     kubectl get raycluster -n <xxx> to get the raycluster name for your deployment.
 
