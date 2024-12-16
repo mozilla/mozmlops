@@ -2,7 +2,11 @@
 
 A package for getting your models into production!
 
-## For the Model Orchestration/Experiment Evaluation Flow Template
+## Templates for Model Orchestration/Experiment Evaluation Flow and Inference server
+
+This repository contains templates for Model Orchestration/Experiment Evaluation and Inference server.
+Please refer to [this template](./src/mozmlops/templates/template_flow.py) for Model Orchestration/Experiment Evaluation Flow and [this template](./src/mozmlops/templates/template_ray_serve.py) for
+an inference server.
 
 You'll find a README in the [src/mozmlops/templates directory](https://github.com/mozilla/mozmlops/tree/main/src/mozmlops/templates)!
 
