@@ -2,8 +2,8 @@
 **This example is a Metaflow flow that trains an image classifier pytorch model on cloud and uploads the trained model on GCS. It tracks the experiments via Weights and Biases. The [original code](https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html) for this example comes from the PyTorch documentation.**
 
 ### Flow details
-- The training step (`train`) runs on Nvidia cloud
-- Rest of the steps run on Kubernetes
+- The training step (`train`) runs on Nvidia cloud (1 NVIDIA H100 GPU with ~1.8TB RAM and ~740GB storage)
+- Rest of the steps run on Kubernetes cluster on GCP
 
 ### Running this example on cloud
 #### Pre-requisites
