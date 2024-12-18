@@ -54,3 +54,7 @@ helm upgrade \
 ```
 
 Create the PR after everything seems to be working.
+
+## KubeRay Operator Issues
+
+Brett Kochendorfer has documented some issues specific to Kuberay operator [here](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/668663821/Ray+Cluster+on+Kubernetes#KubeRay-Operator).
