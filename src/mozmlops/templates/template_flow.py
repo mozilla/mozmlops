@@ -41,6 +41,7 @@ class TemplateFlow(FlowSpec):
 
     # You can uncomment and adjust this decorator when it's time to scale your flow remotely.
     # @kubernetes(image="url-to-docker-image:tag", cpu=1)
+    # Check https://docs.metaflow.org/api/step-decorators/kubernetes for details on @kubernetes decorator
     @card(type="default")
     @step
     def start(self):
@@ -65,6 +66,7 @@ class TemplateFlow(FlowSpec):
     # The image referenced HERE is the mozmlops demo image,
     # which has both the dependencies you need run this template flow:
     # scikit-learn (for the specific model called in this demo) and mozmlops (for all your ops tools).
+    # Check https://docs.metaflow.org/api/step-decorators/kubernetes for details on @kubernetes decorator
     @kubernetes(image="registry.hub.docker.com/chelseatroy/mozmlops:latest", cpu=1)
     @step
     def train(self):

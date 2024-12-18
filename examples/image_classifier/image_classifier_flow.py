@@ -154,7 +154,8 @@ class ImageClassifierFlow(FlowSpec):
             "torchvision": "0.19.1",
         },
     )
-    @kubernetes
+    # Check https://docs.metaflow.org/api/step-decorators/kubernetes for details on @kubernetes decorator
+    @kubernetes(cpu=1, memory=4096)
     @step
     def evaluate(self):
         import torch
