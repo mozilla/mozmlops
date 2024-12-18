@@ -37,4 +37,4 @@
     ```
 
 > [!IMPORTANT]
-> Please refer to the [Troubleshooting](../../README.troubleshooting.md) guide for the known issues and how to resolve them.
+> Please refer to the [Troubleshooting](../../README.troubleshooting.orchestration) guide for the known issues and how to resolve them.
