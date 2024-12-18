@@ -1,7 +1,9 @@
 
 ## If you see a redis cleanup pod hanging there in the cluster for your deployment... 
 
-it means some redis error has happened during killing your pod. In this case, do:
+it means some redis error has happened during killing your pod. 
+
+In this case, run the following commands (You'll need k8s cluster access to run them - [here's how to get that](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Running-kubectl/helm-commands)):
 
     kubectl get raycluster -n <xxx> to get the raycluster name for your deployment.
 
@@ -12,7 +14,8 @@ it means some redis error has happened during killing your pod. In this case, do
     This should apply the change and allow kuberay to clean up the ray cluster without needing the redis cleanup thing to run.
 
 Likely this can be due to your pod name being too long, which translates to your application name being too long. SHORTEN your application name.
-Test Deployment Changes From Local
+
+## Test Deployment Changes From Local
 
 In order to avoid too many subsequent PRs to dataservices or webservices repo, it’s better to test deployment changes from local when you are done so that you can debug without the hassle of going through all the PR review and approval steps.
 
