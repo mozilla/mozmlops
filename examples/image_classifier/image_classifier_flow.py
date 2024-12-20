@@ -83,6 +83,7 @@ class ImageClassifierFlow(FlowSpec):
         import wandb
         import os
 
+        tracking_run = {}
         if not self.offline_wandb:
             tracking_run = wandb.init(project=os.getenv("WANDB_PROJECT"))
             wandb_url = tracking_run.get_url()
@@ -144,6 +145,16 @@ class ImageClassifierFlow(FlowSpec):
         buffer = BytesIO()
         torch.save(image_classifier_model.state_dict(), buffer)
         self.model_state_dict_bytes = buffer.getvalue()
+
+        if not self.offline_wandb:
+            # Save trained model locally and then track it in W&B
+            torch.save(image_classifier_model.state_dict(), "./trained_model.pt")
+            model_artifact = wandb.Artifact(
+                name="trained_image_classifier", type="model"
+            )
+            model_artifact.add_file(local_path="./trained_model.pt")
+            tracking_run.log_artifact(model_artifact)
+
         self.next(self.evaluate)
 
     # Test the model on the test data
