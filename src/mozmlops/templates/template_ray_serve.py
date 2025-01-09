@@ -4,6 +4,8 @@
 
 # The original code in this file comes from the Ray serve documentation:
 # https://docs.ray.io/en/latest/serve/develop-and-deploy.html#convert-a-model-into-a-ray-serve-application
+# import ray
+# ray.init()
 
 from ray import serve
 

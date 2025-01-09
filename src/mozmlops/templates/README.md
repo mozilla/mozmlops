@@ -142,18 +142,27 @@ Deploying your Ray Serve app to production requires changes in 3 different repos
 1. Install requirements
 
     ```sh
-    pip install -r requirements-rayserve.txt
+    pip install -r requirements.rayserve.txt
     ```
-2. Run Ray Serve app locally using [serve run](https://docs.ray.io/en/latest/serve/api/index.html#serve-run) command
+   
+1. Somewhere inside the environment where you've installed your requirements, run the following two lines of Python:
+    
+   ```python
+    import ray
+    ray.init()
+    ```
+   You only have to do this once per environment. It's commented out at the top of template_ray_serve.py, so you can uncomment it there the first time you do the next step in this list if you like.
+
+1. Run Ray Serve app locally using [serve run](https://docs.ray.io/en/latest/serve/api/index.html#serve-run) command
 
     ```sh
     serve run template_ray_serve:translator_app --route-prefix "/translate"
     ```
-3. In a different terminal, call the locally running service endpoint and check if it returns the expected response
+1. In a different terminal, call the locally running service endpoint and check if it returns the expected response
     ```sh
     curl -i -d '{"text": "Hello world!"}' -X POST "http://127.0.0.1:8000/translate/" -H "Content-Type: application/json"
     ```
-4. Stop the Ray Serve app (kill the `serve run` process) after you are done with testing
+1. Stop the Ray Serve app (kill the `serve run` process) after you are done with testing
 
 #### Create Dockerfile for your Ray Serve app
 Creating docker images is the [recommended way](https://mozilla-hub.atlassian.net/wiki/spaces/DATA/pages/785514640/Deploy+inference+servers+to+production+GKE+using+Ray+Serve#Containerization-of-Ray-Serve-application) to deploy Ray Serve apps to production.
