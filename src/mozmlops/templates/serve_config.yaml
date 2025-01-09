@@ -20,7 +20,7 @@ logging_config:
 applications:
 - name: en_fr_translator # changed auto generated value to assign a meaningful name for the app
   route_prefix: /translate # changed auto generated value to assign the right route prefix for the app
-  import_path: template_ray_serve:translator_app
-  runtime_env: {}
+  import_path: template_ray_serve:translator_app # should be set to the path to your top-level Serve deployment
+  runtime_env: # should either be empty, or this entry should be removed
   deployments:
   - name: Translator

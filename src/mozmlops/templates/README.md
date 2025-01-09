@@ -184,7 +184,7 @@ The Serve config is the [recommended way](https://docs.ray.io/en/latest/serve/pr
 
     Details on the Serve config file can be found [here](https://docs.ray.io/en/latest/serve/production-guide/config.html#serve-config-files). Please make sure the following:
     1. `applications.runtime_env`: This should either be empty or this entry shouldn't exist
-    2. `applications.import_path`: This should be correctly set to the path to your top-level Serve deployment
+    2. `applications.import_path`: This should be set to the path to your top-level Serve deployment
     3. `applications.route_prefix`: This should be unique for your Ray Serve app on a Ray Cluster. It defaults to `/` and could be left as it is OR you can add a route prefix.
 
 3. [_Optional but recommended_] Add this Serve config file to your “application repo”
