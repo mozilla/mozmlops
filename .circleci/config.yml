@@ -49,12 +49,16 @@ jobs:
             echo "$GCLOUD_SERVICE_KEY" > "$GOOGLE_APPLICATION_CREDENTIALS"
             poetry run pytest -m integration
       - run:
-          name: "Running a flow"
-          # These commands load our application credentials from the service account
-          # So that we can run the integration tests.
-          # See https://cloud.google.com/docs/authentication/production
+          name: "Install and Configure outerbounds"
           command: |
-            poetry run outerbounds configure $OB_DEFAULT_PERIMETER_CONFIG_KEY
+            poetry run outerbounds service-principal-configure \
+            --name mozmlops-ci \
+            --deployment-domain desertowl.obp.outerbounds.com \
+            --perimeter contml \
+            --jwt-token $CIRCLE_OIDC_TOKEN_V2
+      - run:
+          name: "Run a flow"
+          command: |
             cd src/mozmlops/templates
             poetry run python template_flow.py --no-pylint run 
 
