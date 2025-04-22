@@ -33,7 +33,7 @@ class ImageClassifierFlow(FlowSpec):
         default=True,
     )
 
-    @pypi(python="3.11.9", packages={"torchvision": "0.19.1"})
+    @pypi(python="3.11.9", packages={"torchvision": "0.21.0"})
     @card(type="default")
     @kubernetes
     @step
@@ -62,7 +62,7 @@ class ImageClassifierFlow(FlowSpec):
     # Keep @nvidia decorator before @step decorator else the flow fails
     @pypi(
         python="3.11.9",
-        packages={"torch": "2.4.1", "torchvision": "0.19.1", "mozmlops": "0.1.4"},
+        packages={"torch": "2.6.0", "torchvision": "0.21.0", "mozmlops": "0.1.4"},
     )
     @nvidia
     # @kubernetes
@@ -137,8 +137,9 @@ class ImageClassifierFlow(FlowSpec):
                 running_loss += loss.item()
                 if i % 2000 == 1999:  # print every 2000 mini-batches
                     print(f"[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.3f}")
-                    # log metrics to wandb
-                    wandb.log({"mini-batches": {i + 1}, "loss": {running_loss / 2000}})
+                    if not self.offline_wandb:
+                        # log metrics to wandb
+                        wandb.log({"mini-batches": {i + 1}, "loss": {running_loss / 2000}})
                     running_loss = 0.0
 
         print("Finished Training")
@@ -161,8 +162,8 @@ class ImageClassifierFlow(FlowSpec):
     @pypi(
         python="3.11.9",
         packages={
-            "torch": "2.4.1",
-            "torchvision": "0.19.1",
+            "torch": "2.6.0",
+            "torchvision": "0.21.0",
         },
     )
     # Check https://docs.metaflow.org/api/step-decorators/kubernetes for details on @kubernetes decorator
