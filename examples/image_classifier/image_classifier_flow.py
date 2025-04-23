@@ -33,7 +33,7 @@ class ImageClassifierFlow(FlowSpec):
         default=True,
     )
 
-    @pypi(python="3.11.9", packages={"torchvision": "0.21.0"})
+    @pypi(python="3.11.9", packages={"torchvision": "0.19.1"})
     @card(type="default")
     @kubernetes
     @step
@@ -62,7 +62,7 @@ class ImageClassifierFlow(FlowSpec):
     # Keep @nvidia decorator before @step decorator else the flow fails
     @pypi(
         python="3.11.9",
-        packages={"torch": "2.6.0", "torchvision": "0.21.0", "mozmlops": "0.1.4"},
+        packages={"torch": "2.4.1", "torchvision": "0.19.1", "mozmlops": "0.1.4"},
     )
     @nvidia
     # @kubernetes
@@ -83,7 +83,6 @@ class ImageClassifierFlow(FlowSpec):
         import wandb
         import os
 
-        tracking_run = {}
         if not self.offline_wandb:
             tracking_run = wandb.init(project=os.getenv("WANDB_PROJECT"))
             wandb_url = tracking_run.get_url()
@@ -137,33 +136,22 @@ class ImageClassifierFlow(FlowSpec):
                 running_loss += loss.item()
                 if i % 2000 == 1999:  # print every 2000 mini-batches
                     print(f"[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.3f}")
-                    if not self.offline_wandb:
-                        # log metrics to wandb
-                        wandb.log({"mini-batches": {i + 1}, "loss": {running_loss / 2000}})
+                    # log metrics to wandb
+                    wandb.log({"mini-batches": {i + 1}, "loss": {running_loss / 2000}})
                     running_loss = 0.0
 
         print("Finished Training")
         buffer = BytesIO()
         torch.save(image_classifier_model.state_dict(), buffer)
         self.model_state_dict_bytes = buffer.getvalue()
-
-        if not self.offline_wandb:
-            # Save trained model locally and then track it in W&B
-            torch.save(image_classifier_model.state_dict(), "./trained_model.pt")
-            model_artifact = wandb.Artifact(
-                name="trained_image_classifier", type="model"
-            )
-            model_artifact.add_file(local_path="./trained_model.pt")
-            tracking_run.log_artifact(model_artifact)
-
         self.next(self.evaluate)
 
     # Test the model on the test data
     @pypi(
         python="3.11.9",
         packages={
-            "torch": "2.6.0",
-            "torchvision": "0.21.0",
+            "torch": "2.4.1",
+            "torchvision": "0.19.1",
         },
     )
     # Check https://docs.metaflow.org/api/step-decorators/kubernetes for details on @kubernetes decorator
