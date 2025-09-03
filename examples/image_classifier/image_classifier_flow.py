@@ -12,7 +12,7 @@ from metaflow import (
     environment,
     kubernetes,
     pypi,
-    nvidia,
+    nvct,
 )
 from metaflow.cards import Markdown
 
@@ -59,12 +59,12 @@ class ImageClassifierFlow(FlowSpec):
         self.next(self.train)
 
     # Train the network
-    # Keep @nvidia decorator before @step decorator else the flow fails
+    # Keep @nvct decorator before @step decorator else the flow fails
     @pypi(
         python="3.11.9",
         packages={"torch": "2.4.1", "torchvision": "0.19.1", "mozmlops": "0.1.4"},
     )
-    @nvidia
+    @nvct
     # @kubernetes
     @card
     @environment(
