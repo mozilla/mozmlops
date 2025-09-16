@@ -66,7 +66,7 @@ If you'd like to use a docker image, you can create your own custom image, push 
 ```
 You can see an example Dockerfile [here](Dockerfile-metaflow) in this templates directory.
 
-Please note that if your step should use our NVIDIA GPUs, it cannot use a docker image at present, as the Outerbounds `@nvidia` decorator does not interoperate with docker image specification. In this case, please use the `@pypi` and `@conda` decorators for dependencies as documented above.
+Please note that if your step should use our NVIDIA GPUs, it cannot use a docker image at present, as the Outerbounds `@nvct` decorator does not interoperate with docker image specification. In this case, please use the `@pypi` and `@conda` decorators for dependencies as documented above.
 
 > [!IMPORTANT]
 > Please refer to the [Troubleshooting](../../README.troubleshooting.orchestration.md) guide for the known issues and how to resolve them.
