@@ -108,7 +108,7 @@ class TemplateFlow(FlowSpec):
 
         # Load the Iris dataset
         iris = load_iris()
-        X, y = iris.data, iris.target
+        X, y = iris
 
         # Split the dataset into training and testing sets
         X_train, X_test, y_train, y_test = train_test_split(
