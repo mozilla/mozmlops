@@ -18,8 +18,8 @@ from metaflow.cards import Markdown
 import os, sys, subprocess, importlib, shutil
 
 # Set the right GCP project and GCS bucket
-GCS_PROJECT_NAME = "moz-fx-future-products-nonprod"
-GCS_BUCKET_NAME = "ksilverstein-0din"
+GCS_PROJECT_NAME = "mfouterbounds-prod"
+GCS_BUCKET_NAME = "moz-ml-ai-test-prod"
 # Model blob to be uploaded to GCS
 MODEL_STORAGE_PATH = "image_classifier/trained-model-bytes.pth"
 
