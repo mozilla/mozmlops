@@ -35,7 +35,8 @@ class ImageClassifierFlow(FlowSpec):
 
     @pypi(python="3.11.9", packages={"torchvision": "0.19.1"})
     @card(type="default")
-    @kubernetes
+    #@kubernetes
+    @nvct
     @step
     def start(self):
         import torchvision
@@ -155,7 +156,8 @@ class ImageClassifierFlow(FlowSpec):
         },
     )
     # Check https://docs.metaflow.org/api/step-decorators/kubernetes for details on @kubernetes decorator
-    @kubernetes(cpu=1, memory=4096)
+    #@kubernetes(cpu=1, memory=4096)
+    @nvct
     @step
     def evaluate(self):
         import torch
@@ -196,7 +198,8 @@ class ImageClassifierFlow(FlowSpec):
         self.next(self.upload_model_to_gcs)
 
     @pypi(python="3.11.9", packages={"mozmlops": "0.1.4"})
-    @kubernetes
+    #@kubernetes
+    @nvct
     @step
     def upload_model_to_gcs(self):
         from mozmlops.cloud_storage_api_client import CloudStorageAPIClient
@@ -211,7 +214,8 @@ class ImageClassifierFlow(FlowSpec):
         )
         self.next(self.end)
 
-    @kubernetes
+    #@kubernetes
+    @nvct
     @step
     def end(self):
         print(
