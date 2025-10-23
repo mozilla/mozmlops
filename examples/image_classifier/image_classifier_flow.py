@@ -63,7 +63,7 @@ class ImageClassifierFlow(FlowSpec):
     # Keep @nvct decorator before @step decorator else the flow fails
     @pypi(
         python="3.11.9",
-        packages={"torch": "2.4.1", "torchvision": "0.19.1", "mozmlops": "0.1.4"},
+        packages={"torch": "2.4.1", "torchvision": "0.19.1", "wandb": "0.22.2"},
     )
     @nvct
     # @kubernetes
@@ -197,21 +197,21 @@ class ImageClassifierFlow(FlowSpec):
         )
         self.next(self.upload_model_to_gcs)
 
-    @pypi(python="3.11.9", packages={"mozmlops": "0.1.4"})
+    @pypi(python="3.11.9")
     #@kubernetes
     @nvct
     @step
     def upload_model_to_gcs(self):
-        from mozmlops.cloud_storage_api_client import CloudStorageAPIClient
+        #from mozmlops.cloud_storage_api_client import CloudStorageAPIClient
 
-        print("Uploading model to gcs")
+        print("Skipping Uploading model to gcs")
         # init client
-        storage_client = CloudStorageAPIClient(
-            project_name=GCS_PROJECT_NAME, bucket_name=GCS_BUCKET_NAME
-        )
-        storage_client.store(
-            data=self.model_state_dict_bytes, storage_path=MODEL_STORAGE_PATH
-        )
+        #storage_client = CloudStorageAPIClient(
+        #    project_name=GCS_PROJECT_NAME, bucket_name=GCS_BUCKET_NAME
+        #)
+        #storage_client.store(
+        #    data=self.model_state_dict_bytes, storage_path=MODEL_STORAGE_PATH
+        #)
         self.next(self.end)
 
     #@kubernetes
