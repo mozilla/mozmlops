@@ -12,6 +12,7 @@ from metaflow import (
     environment,
     kubernetes,
     pypi,
+    conda,
     nvct,
 )
 from metaflow.cards import Markdown
@@ -33,7 +34,8 @@ class ImageClassifierFlow(FlowSpec):
         default=True,
     )
 
-    @pypi(python="3.11.9", packages={"torchvision": "0.24.0"})
+    #@pypi(python="3.11.9", packages={"torchvision": "0.24.0"})
+    @conda(python="3.11.9", packages={"torchvision": "0.20.1"})
     @card(type="default")
     #@kubernetes
     @nvct
@@ -61,9 +63,13 @@ class ImageClassifierFlow(FlowSpec):
 
     # Train the network
     # Keep @nvct decorator before @step decorator else the flow fails
-    @pypi(
+    #@pypi(
+    #    python="3.11.9",
+    #    packages={"torch": "2.9.0", "torchvision": "0.24.0", "wandb": "0.22.2"},
+    #)
+    @conda(
         python="3.11.9",
-        packages={"torch": "2.9.0", "torchvision": "0.24.0", "wandb": "0.22.2"},
+        packages={"pytorch": "2.8.0", "torchvision": "0.20.1", "wandb": "0.22.2"},
     )
     @nvct
     # @kubernetes
@@ -148,12 +154,16 @@ class ImageClassifierFlow(FlowSpec):
         self.next(self.evaluate)
 
     # Test the model on the test data
-    @pypi(
+    #@pypi(
+    #    python="3.11.9",
+    #    packages={
+    #        "torch": "2.9.0",
+    #        "torchvision": "0.24.0",
+    #    },
+    #)
+    @conda(
         python="3.11.9",
-        packages={
-            "torch": "2.9.0",
-            "torchvision": "0.24.0",
-        },
+        packages={"pytorch": "2.8.0", "torchvision": "0.20.1"},
     )
     # Check https://docs.metaflow.org/api/step-decorators/kubernetes for details on @kubernetes decorator
     #@kubernetes(cpu=1, memory=4096)
@@ -197,7 +207,8 @@ class ImageClassifierFlow(FlowSpec):
         )
         self.next(self.upload_model_to_gcs)
 
-    @pypi(python="3.11.9")
+    #@pypi(python="3.11.9")
+    @conda(python="3.11.9")
     #@kubernetes
     @nvct
     @step

@@ -27,7 +27,7 @@
 2. Set the right GCP project and bucket in the [flow](./image_classifier_flow.py) where you want to upload the trained model to.
 3. Run this command on the terminal (replace `your_wandb_api_key` and `your_wandb_project` with your details in this command):
    ```sh
-   WANDB_API_KEY=your_wandb_api_key WANDB_PROJECT=your_wandb_project python image_classifier_flow.py --environment=pypi run --offline False
+   WANDB_API_KEY=your_wandb_api_key WANDB_PROJECT=your_wandb_project python image_classifier_flow.py --environment=conda run --offline False
    ```
 
    You can track the progress of the flow run on Outerbounds UI (see the url in your terminal logs).
