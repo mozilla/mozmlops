@@ -35,7 +35,8 @@ class ImageClassifierFlow(FlowSpec):
     )
 
     #@pypi(python="3.11.9", packages={"torchvision": "0.24.0"})
-    @conda(python="3.10", packages={"torchvision": "0.20.1"})
+    #@conda(python="3.10", packages={"torchvision": "0.20.1"})
+    @conda(python="3.10", packages={"torchvision": ""})
     @card(type="default")
     #@kubernetes
     @nvct
@@ -69,7 +70,8 @@ class ImageClassifierFlow(FlowSpec):
     #)
     @conda(
         python="3.10",
-        packages={"pytorch": "2.8.0", "torchvision": "0.20.1", "wandb": "0.22.2"},
+        #packages={"pytorch": "2.8.0", "torchvision": "0.20.1", "wandb": "0.22.2"},
+        packages={"pytorch": "", "torchvision": "", "wandb": ""},
     )
     @nvct
     # @kubernetes
@@ -163,7 +165,8 @@ class ImageClassifierFlow(FlowSpec):
     #)
     @conda(
         python="3.10",
-        packages={"pytorch": "2.8.0", "torchvision": "0.20.1"},
+        #packages={"pytorch": "2.8.0", "torchvision": "0.20.1"},
+        packages={"pytorch": "", "torchvision": ""},
     )
     # Check https://docs.metaflow.org/api/step-decorators/kubernetes for details on @kubernetes decorator
     #@kubernetes(cpu=1, memory=4096)
