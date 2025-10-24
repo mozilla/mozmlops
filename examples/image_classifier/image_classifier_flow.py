@@ -35,7 +35,7 @@ class ImageClassifierFlow(FlowSpec):
     )
 
     #@pypi(python="3.11.9", packages={"torchvision": "0.24.0"})
-    @conda(python="3.11.9", packages={"torchvision": "0.20.1"})
+    @conda(python="3.10", packages={"torchvision": "0.20.1"})
     @card(type="default")
     #@kubernetes
     @nvct
@@ -68,7 +68,7 @@ class ImageClassifierFlow(FlowSpec):
     #    packages={"torch": "2.9.0", "torchvision": "0.24.0", "wandb": "0.22.2"},
     #)
     @conda(
-        python="3.11.9",
+        python="3.10",
         packages={"pytorch": "2.8.0", "torchvision": "0.20.1", "wandb": "0.22.2"},
     )
     @nvct
@@ -162,7 +162,7 @@ class ImageClassifierFlow(FlowSpec):
     #    },
     #)
     @conda(
-        python="3.11.9",
+        python="3.10",
         packages={"pytorch": "2.8.0", "torchvision": "0.20.1"},
     )
     # Check https://docs.metaflow.org/api/step-decorators/kubernetes for details on @kubernetes decorator
@@ -208,7 +208,7 @@ class ImageClassifierFlow(FlowSpec):
         self.next(self.upload_model_to_gcs)
 
     #@pypi(python="3.11.9")
-    @conda(python="3.11.9")
+    @conda(python="3.10")
     #@kubernetes
     @nvct
     @step
