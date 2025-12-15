@@ -60,9 +60,7 @@ workflows:
   pre-merge-workflow:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - all-tests-job:
-          # Provides environment variables needed to integrate with GCS for integration tests
-         context: data-eng-circleci-tests
+      - all-tests-job
   nightly-workflow:
     triggers:
       - schedule:
@@ -72,7 +70,5 @@ workflows:
               only:
                 - main
     jobs:
-      - all-tests-job:
-          # Provides environment variables needed to integrate with GCS for integration tests
-         context: data-eng-circleci-tests
+      - all-tests-job
 
