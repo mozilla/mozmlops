@@ -15,7 +15,7 @@ def test_store_fetch_delete__nominal(tmp_path):
     Each has its own assertions and error messages, designed to help pinpoint the failure.
     You can also visit the bucket on GCS to find the file:
 
-    https://console.cloud.google.com/storage/browser/moz-fx-data-bigquery-etl-integration-tests-mozmlops 
+    https://console.cloud.google.com/storage/browser/moz-fx-data-bigquery-etl-integration-tests-mozmlops
 
     These functions are tested together as a top-level integration test because:
 
@@ -26,7 +26,8 @@ def test_store_fetch_delete__nominal(tmp_path):
     # Given an artifact store and a file containing Ada Lovelace's name:
 
     storage_client = CloudStorageAPIClient(
-        project_name="mozdata", bucket_name="moz-fx-data-bigquery-etl-integration-tests-mozmlops"
+        project_name="mozdata",
+        bucket_name="moz-fx-data-bigquery-etl-integration-tests-mozmlops",
     )
 
     string_to_store = "Ada Lovelace"
