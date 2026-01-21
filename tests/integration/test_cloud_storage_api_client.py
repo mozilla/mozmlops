@@ -26,7 +26,7 @@ def test_store_fetch_delete__nominal(tmp_path):
     # Given an artifact store and a file containing Ada Lovelace's name:
 
     storage_client = CloudStorageAPIClient(
-        project_name="mozdata",
+        project_name="bigquery-etl-integration-test",
         bucket_name="moz-fx-data-bigquery-etl-integration-tests-mozmlops",
     )
 
