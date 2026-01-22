@@ -86,7 +86,8 @@ def test_store__existing_filename__throws_clear_exception():
     # Given an artifact store and a file containing Grace Hopper's name:
 
     storage_client = CloudStorageAPIClient(
-        project_name="mozdata", bucket_name="moz-fx-data-circleci-tests-mozmlops"
+        project_name="bigquery-etl-integration-test",
+        bucket_name="moz-fx-data-bigquery-etl-integration-tests-mozmlops",
     )
 
     string_to_store = "Grace Hopper"
