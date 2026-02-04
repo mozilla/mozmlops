@@ -15,12 +15,102 @@ from metaflow import (
     nvct,
 )
 from metaflow.cards import Markdown
+import os, sys, subprocess, importlib, shutil
 
 # Set the right GCP project and GCS bucket
-GCS_PROJECT_NAME = "your-gcp-project-here"
-GCS_BUCKET_NAME = "your-gcs-bucket-here"
+GCS_PROJECT_NAME = "mfouterbounds-prod"
+GCS_BUCKET_NAME = "moz-ml-ai-test-prod"
 # Model blob to be uploaded to GCS
 MODEL_STORAGE_PATH = "image_classifier/trained-model-bytes.pth"
+
+
+class RuntimeImportHelper:
+    @staticmethod
+    def sh(cmd):
+        print(f"$ {' '.join(cmd)}")
+        try:
+            return subprocess.check_output(cmd, stderr=subprocess.STDOUT, text=True)
+        except subprocess.CalledProcessError as e:
+            print(e.output)
+            raise
+
+    @staticmethod
+    def ensure_cpu_torch(version_torch="2.4.1", version_tv="0.19.1") -> None:
+        """
+        Ensure CPU-only PyTorch/torchvision are installed before importing torch.
+        Forces the official CPU wheel index to avoid accidental CUDA wheels.
+        """
+        import sys, subprocess, importlib
+
+        try:
+            import torch  # already installed?
+            # If this torch has *no* CUDA build info, it's CPU-only
+            cuda_ver = getattr(getattr(torch, "version", None), "cuda", None)
+            if not cuda_ver:
+                return
+            # If it *does* have a CUDA tag, replace it with CPU wheels.
+        except Exception:
+            pass
+
+        # Install CPU wheels from the official PyTorch CPU index.
+        cpu_index = "https://download.pytorch.org/whl/cpu"
+        pkgs = [f"torch=={version_torch}", f"torchvision=={version_tv}"]
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "--index-url", cpu_index] + pkgs)
+        importlib.invalidate_caches()
+
+    @staticmethod
+    def ensure_cuda_torch(version="2.4.1", tv_version="0.19.1", cuda_tag="cu121"):
+        """
+        Ensure CUDA-enabled PyTorch and matching torchvision are installed *before* importing them.
+        - Installs torch from the official PyTorch CUDA wheel index (e.g., cu121).
+        - Installs torchvision from the same index to keep ABI compatible.
+        - Purges previously-loaded CPU torch/torchvision modules, then re-imports.
+        - Verifies CUDA availability and basic torchvision dataset import.
+        """
+        import os, sys, subprocess, importlib, shutil
+
+        def sh(cmd):
+            print(f"$ {' '.join(cmd)}")
+            try:
+                return subprocess.check_output(cmd, stderr=subprocess.STDOUT, text=True)
+            except subprocess.CalledProcessError as e:
+                print(e.output)
+                raise
+
+        print("=== GPU/Driver check ===")
+        print("NVIDIA_VISIBLE_DEVICES:", os.getenv("NVIDIA_VISIBLE_DEVICES"))
+        if shutil.which("nvidia-smi"):
+            try:
+                print(sh(["nvidia-smi"]))
+            except Exception:
+                pass
+        else:
+            print("nvidia-smi not found on PATH (likely no GPU attached)")
+
+        # Install/upgrade torch + torchvision from the CUDA index
+        index = f"https://download.pytorch.org/whl/{cuda_tag}"
+        pkgs = [f"torch=={version}", f"torchvision=={tv_version}"]
+        sh([sys.executable, "-m", "pip", "install", "--upgrade", "--index-url", index] + pkgs)
+
+        # Remove any previously-imported CPU/bad builds from sys.modules
+        for m in list(sys.modules):
+            if m == "torch" or m.startswith("torch.") or m == "torchvision" or m.startswith("torchvision."):
+                del sys.modules[m]
+        importlib.invalidate_caches()
+
+        # Import and verify
+        import torch  # noqa: E402
+        print("torch:", torch.__version__, "torch.version.cuda:", torch.version.cuda)
+        print("torch.cuda.is_available():", torch.cuda.is_available())
+        if not torch.cuda.is_available():
+            raise RuntimeError(
+                "CUDA not available in train step. Either no GPU was scheduled, or the node driver "
+                "is too old for this wheel. Check nvidia-smi output above."
+            )
+
+        # Check torchvision bits (we use for datasets/transforms)
+        from torchvision import datasets, transforms  # noqa: F401
+        print("torchvision import OK:", tv_version)
 
 
 class ImageClassifierFlow(FlowSpec):
@@ -33,11 +123,16 @@ class ImageClassifierFlow(FlowSpec):
         default=True,
     )
 
-    @pypi(python="3.11.9", packages={"torchvision": "0.19.1"})
+    @pypi(python="3.11.9", packages={})
     @card(type="default")
     @kubernetes
     @step
     def start(self):
+        RuntimeImportHelper.ensure_cpu_torch()
+
+        import torch
+        assert not torch.cuda.is_available(), "This step should be CPU-only."
+
         import torchvision
         import torchvision.transforms as transforms
 
@@ -59,13 +154,11 @@ class ImageClassifierFlow(FlowSpec):
         self.next(self.train)
 
     # Train the network
-    # Keep @nvct decorator before @step decorator else the flow fails
     @pypi(
         python="3.11.9",
-        packages={"torch": "2.4.1", "torchvision": "0.19.1", "mozmlops": "0.1.4"},
+        packages={"mozmlops": "0.1.4"}  # intentionally omit torch/torchvision here
     )
     @nvct
-    # @kubernetes
     @card
     @environment(
         vars={
@@ -75,6 +168,8 @@ class ImageClassifierFlow(FlowSpec):
     )
     @step
     def train(self):
+        RuntimeImportHelper.ensure_cuda_torch()
+
         import torch
         import torch.nn as nn
         import torch.optim as optim
@@ -82,6 +177,8 @@ class ImageClassifierFlow(FlowSpec):
         from io import BytesIO
         import wandb
         import os
+
+        assert torch.cuda.is_available(), "This step requires GPU and CUDA isn't installed properly in the container."
 
         if not self.offline_wandb:
             tracking_run = wandb.init(project=os.getenv("WANDB_PROJECT"))
@@ -149,16 +246,17 @@ class ImageClassifierFlow(FlowSpec):
     # Test the model on the test data
     @pypi(
         python="3.11.9",
-        packages={
-            "torch": "2.4.1",
-            "torchvision": "0.19.1",
-        },
+        packages={}
     )
     # Check https://docs.metaflow.org/api/step-decorators/kubernetes for details on @kubernetes decorator
     @kubernetes(cpu=1, memory=4096)
     @step
     def evaluate(self):
+        RuntimeImportHelper.ensure_cpu_torch()
+
         import torch
+        assert not torch.cuda.is_available(), "This step should be CPU-only."
+
         from image_classifier_model import ImageClassifierModel
         from io import BytesIO
 
