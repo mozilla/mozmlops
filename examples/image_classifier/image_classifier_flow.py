@@ -12,6 +12,7 @@ from metaflow import (
     environment,
     kubernetes,
     pypi,
+    conda,
     nvct,
 )
 from metaflow.cards import Markdown
@@ -33,9 +34,12 @@ class ImageClassifierFlow(FlowSpec):
         default=True,
     )
 
-    @pypi(python="3.11.9", packages={"torchvision": "0.19.1"})
+    #@pypi(python="3.11.9", packages={"torchvision": "0.24.0"})
+    #@conda(python="3.10", packages={"torchvision": "0.20.1"})
+    @conda(python="3.10", packages={"torchvision": ""})
     @card(type="default")
-    @kubernetes
+    #@kubernetes
+    @nvct
     @step
     def start(self):
         import torchvision
@@ -60,9 +64,14 @@ class ImageClassifierFlow(FlowSpec):
 
     # Train the network
     # Keep @nvct decorator before @step decorator else the flow fails
-    @pypi(
-        python="3.11.9",
-        packages={"torch": "2.4.1", "torchvision": "0.19.1", "mozmlops": "0.1.4"},
+    #@pypi(
+    #    python="3.11.9",
+    #    packages={"torch": "2.9.0", "torchvision": "0.24.0", "wandb": "0.22.2"},
+    #)
+    @conda(
+        python="3.10",
+        #packages={"pytorch": "2.8.0", "torchvision": "0.20.1", "wandb": "0.22.2"},
+        packages={"pytorch": "", "torchvision": "", "wandb": ""},
     )
     @nvct
     # @kubernetes
@@ -147,15 +156,21 @@ class ImageClassifierFlow(FlowSpec):
         self.next(self.evaluate)
 
     # Test the model on the test data
-    @pypi(
-        python="3.11.9",
-        packages={
-            "torch": "2.4.1",
-            "torchvision": "0.19.1",
-        },
+    #@pypi(
+    #    python="3.11.9",
+    #    packages={
+    #        "torch": "2.9.0",
+    #        "torchvision": "0.24.0",
+    #    },
+    #)
+    @conda(
+        python="3.10",
+        #packages={"pytorch": "2.8.0", "torchvision": "0.20.1"},
+        packages={"pytorch": "", "torchvision": ""},
     )
     # Check https://docs.metaflow.org/api/step-decorators/kubernetes for details on @kubernetes decorator
-    @kubernetes(cpu=1, memory=4096)
+    #@kubernetes(cpu=1, memory=4096)
+    @nvct
     @step
     def evaluate(self):
         import torch
@@ -195,23 +210,26 @@ class ImageClassifierFlow(FlowSpec):
         )
         self.next(self.upload_model_to_gcs)
 
-    @pypi(python="3.11.9", packages={"mozmlops": "0.1.4"})
-    @kubernetes
+    #@pypi(python="3.11.9")
+    @conda(python="3.10")
+    #@kubernetes
+    @nvct
     @step
     def upload_model_to_gcs(self):
-        from mozmlops.cloud_storage_api_client import CloudStorageAPIClient
+        #from mozmlops.cloud_storage_api_client import CloudStorageAPIClient
 
-        print("Uploading model to gcs")
+        print("Skipping Uploading model to gcs")
         # init client
-        storage_client = CloudStorageAPIClient(
-            project_name=GCS_PROJECT_NAME, bucket_name=GCS_BUCKET_NAME
-        )
-        storage_client.store(
-            data=self.model_state_dict_bytes, storage_path=MODEL_STORAGE_PATH
-        )
+        #storage_client = CloudStorageAPIClient(
+        #    project_name=GCS_PROJECT_NAME, bucket_name=GCS_BUCKET_NAME
+        #)
+        #storage_client.store(
+        #    data=self.model_state_dict_bytes, storage_path=MODEL_STORAGE_PATH
+        #)
         self.next(self.end)
 
-    @kubernetes
+    #@kubernetes
+    @nvct
     @step
     def end(self):
         print(
